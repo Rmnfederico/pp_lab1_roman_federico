@@ -4,4 +4,7 @@ dict_list = [{"a":1},{"b":2}]
 
 #### PROGAM START ####
 
-funcs.main_app(dict_list)
+players_list = funcs.read_json_file("dt.json", "jugadores")
+
+#funcs.main_app(players_list)
+

@@ -1,6 +1,9 @@
 import re
 import json
 
+
+########## Menu Funcs. ##########
+
 def print_menu() -> None:
     print("\nmain menu (first exam):\n")
     print("0. end program\n")
@@ -63,3 +66,46 @@ def main_app(dict_list: list[dict]) -> None:
             case _:
                 print("incorrect option.")
                 pass
+
+########## Files Handling ##########
+
+def read_json_file(filepath: str, list_key):
+    """
+    This function reads a JSON file and returns a list of (dicts) from it.
+    
+    :param filepath: a string that represents the path to a file that contains
+    data in JSON format
+    :type filepath: str
+    :return: a list of dictionaries read from a JSON file specified by the `filepath` parameter.
+    """
+    dict_lst = list()
+    with open(filepath, "r") as file:
+        dictionary = json.load(file)
+        dict_lst = dictionary[list_key] # CHANGE ACCORDING TO LIST NAME
+    return dict_lst
+
+##########  ##########  ##########  ##########  ##########  ##########
+
+#1.
+def get_name_data(dictionary: dict, search_key: str) -> str:
+    try:
+        if search_key in dictionary and isinstance(dictionary, dict):
+            return f'Name: {dictionary["nombre"]} | {search_key.capitalize()}: {dictionary[search_key]}'
+    except KeyError as err:
+        print(f"KeyError: {err} not in dict.")
+
+def list_names_data(dict_list: list[dict], search_key: str):
+    if not dict_list or not isinstance(dict_list, list):
+        return None
+    else:
+        for index, dictionary in enumerate(dict_list):
+            if search_key in dictionary:
+                print(f'{index+1}-{get_name_data(dictionary, search_key)}')
+
+#2. 
+
+###############
+
+players_list = read_json_file("dt.json", "jugadores")
+
+list_names_data(players_list, "posicion") # WORKING
