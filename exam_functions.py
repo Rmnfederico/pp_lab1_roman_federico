@@ -85,6 +85,52 @@ def read_json_file(filepath: str, list_key) -> list:
         dict_lst = dictionary[list_key] # CHANGE ACCORDING TO LIST NAME
     return dict_lst
 
+def parse_dict_values(dictionary: dict):
+    if not dictionary or not isinstance(dictionary, dict):
+        return None
+    else:
+        dictionary_string = ""
+        for index, value in enumerate(dictionary.values()):
+            if value and value != "":
+                if index < (len(dictionary.values())-1):
+                    dictionary_string += f'{value},'
+                else:
+                    dictionary_string += f'{value}\n'
+        return dictionary_string
+
+def parse_dict_keys(dictionary: dict):
+    if not dictionary or not isinstance(dictionary, dict):
+        return None
+    else:
+        dictionary_string = ""
+        for index, key in enumerate(dictionary.keys()):
+            if key:
+                if index < (len(dictionary.keys())-1):
+                    dictionary_string += f'{key},'
+                else:
+                    dictionary_string += f'{key}\n'
+        return dictionary_string
+
+def save_dict_as_csv(csv_filepath, dictionary: dict) -> bool:
+    if not dictionary or not isinstance(dictionary, dict):
+        print("Invalid input. The parameter must be a dictionary.")
+        return False
+
+    try:
+        with open(csv_filepath, "w+") as file:
+            written_bytes = file.write(parse_dict_keys(dictionary))
+            written_bytes += file.write(parse_dict_values(dictionary))
+
+        if written_bytes != 0:
+            print(f'{written_bytes} bytes successfully written at "{csv_filepath}"')
+            return True
+        else:
+            print(f'Error trying to write "{csv_filepath}" file.')
+            return False
+
+    except (FileNotFoundError, PermissionError, IOError) as err:
+        print(f'An error occurred while saving the file: {err}')
+        return False
 
 ########## Validations / Get Inputs ##########
 
@@ -117,7 +163,6 @@ def check_int_string(string: str) -> bool:
             print(f"ValueError: {e2}: string can't be converted to int.")
             return False
 
-
 def get_int(input_msg: str, retries: int = 0) -> int:
     retries += 1
     while retries > 0:
@@ -135,6 +180,18 @@ def validate_range(number: int, min, max) -> bool:
         return False
     else:
         return True
+    
+def get_string(input_msg: str,retries: int = 0) -> str:
+    retries += 1
+    while retries > 0:
+        string = input(input_msg)
+        if(len(string) > 0):
+            return string
+        else:
+            retries -= 1
+            print(f"ERROR: string can't be empty. {retries} retries left.")
+    print("no retries left.")
+    return None
 
 def get_name_data(dictionary: dict, search_key: str) -> str:
     try:
@@ -185,15 +242,43 @@ def show_player_statistics(dict_list: list[dict]):
         list_index_kv_pair(dict_list, "nombre")
         player_index = get_int("Enter the index of the player to show:")
         if validate_range((player_index-1), 0, (len(dict_list)-1)):
-            list_column_key_values(dict_list[player_index-1]["estadisticas"])
+            selected_player = dict_list[player_index-1]
+            list_column_key_values(selected_player["estadisticas"])
+            save_player_statistics_as_csv(selected_player)
+        else:
+            print("index not found in list.")
 
+#3. Save name, position, player statistics
 
+def extract_statistics_dict(dictionary: dict) -> dict:
+    if dictionary and isinstance(dictionary, dict):
+        player_statistics_dict = dict()
+        player_statistics_dict["nombre"] = dictionary.get("nombre")
+        player_statistics_dict["posicion"] = dictionary.get("posicion")
+        for key, value in dictionary["estadisticas"].items():
+            player_statistics_dict[key] = value
+        return player_statistics_dict
+    else:
+        return None
+
+def save_player_statistics_as_csv(dictionary: dict) -> bool:
+    option = get_string("Do you want to save player's statistics? (y/n)")
+    if re.match(r"^[y]$", option, re.I):
+        player_statistics_dict = extract_statistics_dict(dictionary)
+        if save_dict_as_csv(f'{player_statistics_dict.get("nombre")}.csv'.replace(" ", "_"), player_statistics_dict):
+            return True
+    
+    else:
+        print("player's statistics not saved.")
+        return False
+    
+#4. 
 ##########  ##########  ##########  ##########  ##########  ##########
 
 
 players_list = read_json_file("dt.json", "jugadores")
 
 #list_names_data(players_list, "posicion") # WORKING
-show_player_statistics(players_list)
+show_player_statistics(players_list) # WORKING
 
 
