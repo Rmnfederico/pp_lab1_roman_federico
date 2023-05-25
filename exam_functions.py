@@ -272,13 +272,58 @@ def save_player_statistics_as_csv(dictionary: dict) -> bool:
         print("player's statistics not saved.")
         return False
     
-#4. 
+#4. let user select a player by name, then list achievements for that player/s
+
+def find_name_by_string_comp(dict_list: list[dict]):
+    if not dict_list:
+        return None
+    else: 
+        search_name = get_string("enter the name of the player:")
+        if search_name:
+            filtered_list = list()
+            for player in dict_list:
+                search = re.search(search_name.replace(" ", ""), player["nombre"], re.I)
+                if search:
+                    start, end = search.span()
+                    if end-start >= 4:
+                        filtered_list.append(player)
+    if filtered_list:
+        print(f'{len(filtered_list)} players matched search parameter:')
+        list_index_kv_pair(filtered_list, "nombre")
+        return filtered_list
+    else:
+        print(f"no matches found for '{search_name}' in the list.")
+        return None
+
+def show_player_achievements_by_name(dict_list: list[dict]):
+    if not dict_list or not all((d, dict) for d in dict_list):
+        return None
+    else:
+        filtered_list = find_name_by_string_comp(dict_list)
+        if not filtered_list:
+            return None
+        elif len(filtered_list) == 1:
+            for achievement in filtered_list[0]["logros"]:
+                print(achievement) 
+        else:
+            sub_option = get_int("\nselect index from found players:")
+            if sub_option > 0 and sub_option <= len(filtered_list):
+                print(f'\nAchievements for {filtered_list[sub_option-1].get("nombre")}:\n')
+                for achievement in filtered_list[sub_option-1]["logros"]:
+                    print(achievement)
+            else:
+                print(f"index {sub_option} not found.")
+                return None
+
+
 ##########  ##########  ##########  ##########  ##########  ##########
 
 
 players_list = read_json_file("dt.json", "jugadores")
 
 #list_names_data(players_list, "posicion") # WORKING
-show_player_statistics(players_list) # WORKING
+#show_player_statistics(players_list) # WORKING
+#show_player_achievements_by_name()
 
+#show_player_achievements_by_name(players_list) # WORKING
 
