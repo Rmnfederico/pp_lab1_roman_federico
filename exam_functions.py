@@ -206,6 +206,82 @@ def get_formatted_key_value(dictionary: dict, search_key: str) -> str:
     else:
         return f'{search_key.capitalize()}: {dictionary.get(search_key, "N/A")}'
 
+########## Sorting Functions ##########
+
+def quicksort_for_dicts(origin_dict_list:list, comp_key, asc: bool = True) -> list:
+    """
+    This function performs quicksort algo on a list of dictionaries sorting order based on a specified key.
+    
+    :param origin_dict_list: a list of dictionaries that need to be sorted
+    :type origin_dict_list: list
+    :param comp_key: The key in the dictionary that will be used for comparison during the sorting
+    process
+    :param asc: A boolean parameter that determines whether the sorting should be in ascending order
+    (True) or descending order (False), defaults to True
+    :type asc: bool (optional)
+    :return: a sorted list of dictionaries based on the value of a specified key in each dictionary. The
+    sorting order (ascending or descending) is determined by the `asc` parameter.
+    """
+    if len(origin_dict_list) <= 1:
+        return origin_dict_list
+    else:
+        dict_list = origin_dict_list.copy()
+        pivot = dict_list[0]
+        if asc:
+            lesser = [x for x in dict_list[1:] if x[comp_key] <= pivot[comp_key]]
+            greater = [x for x in dict_list[1:] if x[comp_key] > pivot[comp_key]]
+        else:
+            lesser = [x for x in dict_list[1:] if x[comp_key] >= pivot[comp_key]]
+            greater = [x for x in dict_list[1:] if x[comp_key] < pivot[comp_key]]
+        return quicksort_for_dicts(lesser, comp_key, asc) + [pivot] + quicksort_for_dicts(greater, comp_key, asc)
+
+########## Calculate Functions ##########
+
+def sum_dicts_data(dict_list:list[dict], search_key:str, sub_search_key: str) -> float:
+    if not dict_list or not all(isinstance(d, dict) for d in dict_list):
+        return None
+    else:
+        try:
+            sum = 0
+            for dictionary in dict_list:
+                if not dictionary:
+                    return None
+                elif search_key in dictionary and sub_search_key in dictionary[search_key] and isinstance(float(dictionary[search_key][sub_search_key]), float):
+                    sum += dictionary[search_key][sub_search_key]
+            return sum 
+        
+        except ValueError as e1:
+            print(f"ValueError: {e1} for '{search_key}' key")
+        except ZeroDivisionError as e2:
+            print(f"ZeroDivisionError: attempted {e2} as no '{search_key}' key was found.")
+        except TypeError as e3:
+            print(f"TypeError: {e3}")
+
+def divide(dividend:int, divider:int):
+    if divider == 0:
+        return 0
+    else:
+        try:
+            return float(dividend)/float(divider)
+        except ValueError as err:
+            print(err)
+            return 0
+        except TypeError as err2:
+            print(err2)
+            return 0
+
+def calculate_avg(dict_list: list[dict], search_key, sub_search_key) -> float:
+    if not dict_list or not all(isinstance(d, dict) for d in dict_list):
+        return None
+    else:
+        counter = 0
+        for dictionary in dict_list:
+            if search_key in dictionary:
+                counter += 1
+        if counter == 0:
+            return None
+        else:
+            return divide(sum_dicts_data(dict_list, search_key, sub_search_key), counter)
 
 ########## Printing / Listing ##########
 
@@ -288,7 +364,7 @@ def find_name_by_string_comp(dict_list: list[dict]):
                     if end-start >= 4:
                         filtered_list.append(player)
     if filtered_list:
-        print(f'{len(filtered_list)} players matched search parameter:')
+        print(f'{len(filtered_list)} player/s matched search parameter:\n')
         list_index_kv_pair(filtered_list, "nombre")
         return filtered_list
     else:
@@ -306,8 +382,13 @@ def show_player_achievements_by_name(dict_list: list[dict]):
             for achievement in filtered_list[0]["logros"]:
                 print(achievement) 
         else:
-            sub_option = get_int("\nselect index from found players:")
-            if sub_option > 0 and sub_option <= len(filtered_list):
+            sub_option = get_int("\nselect index from found players or 0 to print all:")
+            if sub_option == 0:
+                for player in filtered_list:
+                    print(f'\nAchievements for {player["nombre"]}:')
+                    for achievements in player["logros"]:
+                        print(achievements)
+            elif validate_range(sub_option, 1, len(filtered_list)):
                 print(f'\nAchievements for {filtered_list[sub_option-1].get("nombre")}:\n')
                 for achievement in filtered_list[sub_option-1]["logros"]:
                     print(achievement)
@@ -315,6 +396,42 @@ def show_player_achievements_by_name(dict_list: list[dict]):
                 print(f"index {sub_option} not found.")
                 return None
 
+#5. calc. & show avg. points per game (per dream team player) sorted by name (asc)
+def calc_avg_points_list_players(dict_list: list[dict]):
+    if not dict_list or not all(isinstance(d, dict) for d in dict_list):
+        return None
+    else:
+        sorted_list = quicksort_for_dicts(dict_list, "nombre", True)
+        points_avg = calculate_avg(sorted_list, "estadisticas", "promedio_puntos_por_partido")
+        print(f'\nThe average points per game for the whole team is {points_avg}\n')
+        for player in sorted_list:
+             print(f'Name: {str(player["nombre"]).ljust(15)}' + "\t|\t".center(5) + f'Promedio puntos por partido: {player["estadisticas"]["promedio_puntos_por_partido"]}')
+
+#6. let user select a player by name and show if he belongs to hall of fame
+
+def filter_values_from_dict_list(dict_list: list[dict], search_key, filter_string: str) -> list: # IMPLEMENT FROM LINES 424-426 TO REUTILIZE
+    if not dict_list or not all(isinstance(d, dict) for d in dict_list):
+        return None
+    else:
+        pattern = fr'({filter_string})$'
+        #print(pattern)
+        return [d for d in dict_list if any(re.search(pattern, item, re.I) for item in d.get(search_key, []))]
+
+def show_player_hall_of_fame(dict_list: list[dict]):
+    if not dict_list or not all(isinstance(d, dict) for d in dict_list):
+        return None
+    else:
+        filtered_list = find_name_by_string_comp(dict_list)
+        if not filtered_list:
+            return None
+        else:
+            hall_of_fame_list = filter_values_from_dict_list(filtered_list, "logros", "salon de la fama del baloncesto")
+            if hall_of_fame_list:
+                print("\nShowing players from the list that belong to hall of fame:\n")
+                for player in hall_of_fame_list:
+                    print(f'{player["nombre"]} belongs to hall of fame.')
+            else:
+                print("\nplayer/s do not belong to the hall of fame.\n")
 
 ##########  ##########  ##########  ##########  ##########  ##########
 
@@ -326,4 +443,7 @@ players_list = read_json_file("dt.json", "jugadores")
 #show_player_achievements_by_name()
 
 #show_player_achievements_by_name(players_list) # WORKING
+
+#calc_avg_points_list_players(players_list) # WORKING
+#show_player_hall_of_fame(players_list) # WORKING
 
