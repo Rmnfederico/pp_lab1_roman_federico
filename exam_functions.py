@@ -316,7 +316,7 @@ def calculate_max_min_data_dicts(dict_list: list[dict], search_key: str, search_
             print(f"ValueError: {e2} for '{search_key}' key ")
                     
 
-def sum_dicts_data(dict_list:list[dict], search_key:str, sub_search_key: str) -> float:
+def sum_dicts_data(dict_list:list[dict], search_key:str, sub_search_key: str, double_key: bool = True) -> float:
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
         return None
     else:
@@ -325,16 +325,20 @@ def sum_dicts_data(dict_list:list[dict], search_key:str, sub_search_key: str) ->
             for dictionary in dict_list:
                 if not dictionary:
                     return None
-                elif search_key in dictionary and sub_search_key in dictionary[search_key] and isinstance(float(dictionary[search_key][sub_search_key]), float):
-                    sum += dictionary[search_key][sub_search_key]
+                elif double_key:
+                    if search_key in dictionary and sub_search_key in dictionary[search_key] and isinstance(float(dictionary[search_key][sub_search_key]), float):
+                        sum += dictionary[search_key][sub_search_key]
+                else:
+                    if search_key in dictionary and isinstance(float(dictionary[search_key]), float):
+                        sum += dictionary[search_key]
             return sum 
         
-        except ValueError as e1:
-            print(f"ValueError: {e1} for '{search_key}' key")
-        except ZeroDivisionError as e2:
-            print(f"ZeroDivisionError: attempted {e2} as no '{search_key}' key was found.")
-        except TypeError as e3:
-            print(f"TypeError: {e3}")
+        except ValueError as err:
+            print(f"ValueError: {err} for '{search_key}' key")
+        except ZeroDivisionError as err2:
+            print(f"ZeroDivisionError: attempted {err2} as no '{search_key}' key was found.")
+        except TypeError as err3:
+            print(f"TypeError: {err3}")
 
 def divide(dividend:int, divider:int) -> float:
     if divider == 0:
@@ -349,7 +353,7 @@ def divide(dividend:int, divider:int) -> float:
             print(err2)
             return 0
 
-def calculate_avg(dict_list: list[dict], search_key, sub_search_key) -> float:
+def calculate_avg(dict_list: list[dict], search_key, sub_search_key, double_key: bool = True) -> float:
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
         return None
     else:
@@ -360,8 +364,10 @@ def calculate_avg(dict_list: list[dict], search_key, sub_search_key) -> float:
         if counter == 0:
             return None
         else:
-            return divide(sum_dicts_data(dict_list, search_key, sub_search_key), counter)
-
+            if double_key:
+                return divide(sum_dicts_data(dict_list, search_key, sub_search_key), counter)
+            else:
+                return divide(sum_dicts_data(dict_list, search_key, sub_search_key, False), counter)
 ########## Printing / Listing ##########
 
 #1.
@@ -437,7 +443,7 @@ def find_name_by_string_comp(dict_list: list[dict]) -> list:
         if search_name:
             filtered_list = list()
             for player in dict_list:
-                search = re.search(search_name.replace(" ", ""), player["nombre"], re.I)
+                search = re.search(search_name.replace(" ", ""), player["nombre"], re.I) 
                 if search:
                     start, end = search.span()
                     if end-start >= 4:
@@ -493,7 +499,6 @@ def filter_values_from_dict_list(dict_list: list[dict], search_key, filter_strin
         return None
     else:
         pattern = fr'({filter_string})$'
-        #print(pattern)
         return [d for d in dict_list if any(re.search(pattern, item, re.I) for item in d.get(search_key, []))]
 
 def show_player_hall_of_fame(dict_list: list[dict]) -> None:
@@ -513,31 +518,24 @@ def show_player_hall_of_fame(dict_list: list[dict]) -> None:
                 print("\nplayer/s do not belong to the hall of fame.\n")
 
 #7. calculate and print player w/ the highest total rebounds count
-def show_highest_rebounds_player(dict_list: list[dict]) -> dict:
+def show_highest_stat_player(dict_list: list[dict], search_key: str, search_sub_key: str, stat) -> dict:
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
         return None
     else:
-        max_rebounds_player = calculate_max_min_data_dicts(players_list, "estadisticas", "rebotes_totales", True)
-        print("\nMax. rebounds player:")
-        print(f'{get_formatted_key_value(max_rebounds_player, "nombre")} | {get_formatted_key_value(max_rebounds_player["estadisticas"], "rebotes_totales")}')
+        max_stat_player = calculate_max_min_data_dicts(players_list, search_key, search_sub_key, True)
+        if not max_stat_player:
+            return None
+        else:
+            print(f"\nMax. {stat} player:")
+            print(f'{get_formatted_key_value(max_stat_player, "nombre")} | {get_formatted_key_value(max_stat_player[search_key], search_sub_key)}')
 
 #8. calculate and print player w/ the highest field shots percentage
-def show_highest_field_shots_percentage_player(dict_list: list[dict]) -> dict:
-    if not dict_list or not all(isinstance(d, dict) for d in dict_list):
-        return None
-    else:
-        max_rebounds_player = calculate_max_min_data_dicts(players_list, "estadisticas", "porcentaje_tiros_de_campo", True)
-        print("\nMax. field shots percentage player:")
-        print(f'{get_formatted_key_value(max_rebounds_player, "nombre")} | {get_formatted_key_value(max_rebounds_player["estadisticas"], "porcentaje_tiros_de_campo")}')
+#show_highest_stat_player(players_list, "estadisticas", "porcentaje_tiros_de_campo", "field shots percentage")
+
 
 #9. calculate and print player w/ the highest total assists count
-def show_highest_assists_player(dict_list: list[dict]) -> dict:
-    if not dict_list or not all(isinstance(d, dict) for d in dict_list):
-        return None
-    else:
-        max_rebounds_player = calculate_max_min_data_dicts(players_list, "estadisticas", "asistencias_totales", True)
-        print("\nMax. total assists player:")
-        print(f'{get_formatted_key_value(max_rebounds_player, "nombre")} | {get_formatted_key_value(max_rebounds_player["estadisticas"], "asistencias_totales")}')
+#show_highest_stat_player(players_list, "estadisticas", "asistencias_totales", "total assists")
+
 
 #10. let user enter a value and show players with a higher points per game avg than it
 
@@ -565,37 +563,72 @@ def filter_greater_or_lesser(dict_list: list[dict], search_key, search_sub_key, 
             else:
                 return lesser_list
 
-def show_higher_points_per_game_list(dict_list: list[dict]) -> dict:
+def show_higher_stats_per_game_list(dict_list: list[dict], search_key: str, sub_search_key: str) -> None:
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
         return None
     else:
-        filtered_list = filter_greater_or_lesser(dict_list, "estadisticas", "promedio_puntos_por_partido", True)
+        filtered_list = filter_greater_or_lesser(dict_list, search_key, sub_search_key, True)
         if not filtered_list:
             print("no matches found for the value entered.")
             return None
         else:
+            print(f'\nHigher {sub_search_key.replace("_", " ")} list:\n')
             for player in filtered_list:
-                print(f'{get_formatted_key_value(player, "nombre")} | {get_formatted_key_value(player["estadisticas"], "promedio_puntos_por_partido")}')
+                print(f'{get_formatted_key_value(player, "nombre")} | {get_formatted_key_value(player[search_key], sub_search_key)}')
 
-#11. 
+#11. let user enter a value and show players with a higher rebounds per game avg than it
+#show_higher_stats_per_game_list(players_list, "estadisticas", "promedio_rebotes_por_partido") # WORKING
+
+#12. let user enter a value and show players with a assists per game count let user enter a value and show players with a higher than it
+#show_higher_stats_per_game_list(players_list, "estadisticas", "promedio_asistencias_por_partido")
+
+#13. 
+#show_highest_stat_player(players_list, "estadisticas", "robos_totales", "total steals") # WORKING
+
+#14. 
+#show_highest_stat_player(players_list, "estadisticas", "bloqueos_totales", "total blocks") # WORKING
+
+#15. 
+#show_higher_stats_per_game_list(players_list, "estadisticas", "porcentaje_tiros_libres") # WORKING
+
+#16.
+def show_points_per_game_avg_less_lower(dict_list: list[dict]) -> None:
+    if not dict_list or not all(isinstance(d, dict) for d in dict_list):
+        return None
+    else:
+        sorted_list = quicksort_for_dicts([extract_statistics_dict(d) for d in dict_list], "promedio_puntos_por_partido", True)
+        lowest_name, lowest_score = sorted_list[0]['nombre'], sorted_list[0]['promedio_puntos_por_partido']
+        print(f"\nAvg w/o {lowest_name}'s score ({lowest_score}):\n{calculate_avg(sorted_list[1:], 'promedio_puntos_por_partido', '', False)}")
 
 
+#17. 
+def show_highest_achievements_player(dict_list: list[dict]) -> None:
+    pass
 ##########  ##########  ##########  ##########  ##########  ##########
 
 
 players_list = read_json_file("dt.json", "jugadores")
 
-#list_names_data(players_list, "posicion") # WORKING
-#show_player_statistics(players_list) # WORKING
-#show_player_achievements_by_name()
+#list_names_data(players_list, "posicion") # WORKING -1
+#show_player_statistics(players_list) # WORKING -2/3
 
-#show_player_achievements_by_name(players_list) # WORKING
+#show_player_achievements_by_name(players_list) # WORKING -4
 
-#calc_avg_points_list_players(players_list) # WORKING
-#show_player_hall_of_fame(players_list) # WORKING
+#calc_avg_points_list_players(players_list) # WORKING -5
+#show_player_hall_of_fame(players_list) # WORKING -6
 
-#show_highest_rebounds_player(players_list) # WORKING
-#show_highest_field_shots_percentage_player(players_list) # WORKING
-#show_highest_assists_player(players_list) # WORKING
+#show_highest_stat_player(players_list, "estadisticas", "rebotes_totales", "rebounds") # WORKING -7
+#show_highest_stat_player(players_list, "estadisticas", "porcentaje_tiros_de_campo", "field shots percentage") #WORKING -8
+#show_highest_stat_player(players_list, "estadisticas", "asistencias_totales", "total assists") # WORKING -9
 
-show_higher_points_per_game_list(players_list)
+#show_higher_stats_per_game_list(players_list, "estadisticas", "promedio_puntos_por_partido") # WORKING -10
+#show_higher_stats_per_game_list(players_list, "estadisticas", "promedio_rebotes_por_partido") # WORKING -11
+#show_higher_stats_per_game_list(players_list, "estadisticas", "promedio_asistencias_por_partido") # WORKING -12
+
+#show_highest_stat_player(players_list, "estadisticas", "robos_totales", "total steals") # WORKING -13
+#show_highest_stat_player(players_list, "estadisticas", "bloqueos_totales", "total blocks") # WORKING -14
+
+#show_higher_stats_per_game_list(players_list, "estadisticas", "porcentaje_tiros_libres") # WORKING -15
+
+#show_points_per_game_avg_less_lower(players_list) # WORKING -16
+
