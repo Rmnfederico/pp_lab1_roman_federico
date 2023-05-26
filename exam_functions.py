@@ -8,22 +8,35 @@ import os
 def print_menu() -> None:
     print("\nmain menu (first exam):\n")
     print("0. end program\n")
-    print("A. Opt A")
-    print("B. Opt B")
-    print("C. Opt C")
-    print("D. Opt D")
-    print("E. Opt E")
-    print("F. Opt F")
+    print("1. Opt 1")
+    print("2. Opt 2")
+    print("3. Opt 3")
+    print("4. Opt 4")
+    print("5. Opt 5")
+    print("6. Opt 6")
+    print("7. Opt 7")
+    print("8. Opt 8")
+    print("9. Opt 9")
+    print("10. Opt 10")
+    print("11. Opt 11")
+    print("12. Opt 12")
+    print("13. Opt 13")
+    print("14. Opt 14")
+    print("15. Opt 15")
+    print("16. Opt 16")
+    print("17. Opt 17")
+    print("18. Opt 18")
+    print("19. Opt 19")
+    print("20. Opt 20")
+    print("23. Opt 23")
 
 
 
-def main_menu():
+def main_menu() -> int:
     print_menu()
     option: str = input("enter your option:")
-    if re.match(r'[A-F]', option.upper()) is not None:
-        return option.upper()
-    elif re.match(r'^[0]$', option):
-        return 0
+    if re.match(r'^(?:[0-9]|1[0-9]|20|23)$', option):
+        return int(option)
     else:
         return -1
 
@@ -34,39 +47,55 @@ def main_app(dict_list: list[dict]) -> None:
         
         #TODO -> get_validated_float/int() functions
         match main_menu():
-            case "A":
-                opt_string = "option_a"
-                #selected_list = list_N_heroes(dict_list, len(dict_list))
-                pass # REMOVE
-            case "B":
-                opt_string = "option_b"
-                #selected_list = sort_by_key_and_list(dict_list, "altura", True)
-                pass # REMOVE
-            case "C":
-                opt_string = "option_c"
-                #selected_list = sort_by_key_and_list(dict_list, "fuerza", True)
-                pass # REMOVE
-            case "D":
-                opt_string = "option_d"
-                #selected_list = calculate_avg_filter_greater_or_lesser(dict_list, "peso", True)
-                pass # REMOVE
-            case "E":
-                opt_string = "option_e"
-                #selected_list = find_heroes_by_int(dict_list, "avE RagE")
-                pass # REMOVE
-            case "F": # SAVE LAST OPTION TO CSV
-                if selected_list and opt_string:
-                    #save_dict_list_as_csv(f"{opt_string}.csv", selected_list)
-                    selected_list, opt_string = None, None
-                else:
-                    print("ERROR! you need to select an option before saving.")
-                    pass  
+            case 1:
+                print("option 1")
+            case 2:
+                print("option 2")
+            case 3:
+                print("option 3")
+            case 4:
+                print("option 4")
+            case 5:
+                print("option 5")
+            case 6:
+                print("option 6")
+            case 7:
+                print("option 7")
+            case 8:
+                print("option 8")
+            case 9:
+                print("option 9")
+            case 10:
+                print("option 10")
+            case 11:
+                print("option 11")
+            case 12:
+                print("option 12")
+            case 13:
+                print("option 13")
+            case 14:
+                print("option 14")
+            case 15:
+                print("option 15")
+            case 16:
+                print("option 16")
+            case 17:
+                print("option 17")
+            case 18:
+                print("option 18")
+            case 19:
+                print("option 19")
+            case 20:
+                print("option 20")
+            case 23:
+                print("option 23")
             case 0:
                 print("program finished.")
                 break
             case _:
                 print("incorrect option.")
                 pass
+        clear_console()
 
 ########## Files Handling ##########
 
@@ -85,7 +114,7 @@ def read_json_file(filepath: str, list_key) -> list:
         dict_lst = dictionary[list_key] # CHANGE ACCORDING TO LIST NAME
     return dict_lst
 
-def parse_dict_values(dictionary: dict):
+def parse_dict_values(dictionary: dict) -> str:
     if not dictionary or not isinstance(dictionary, dict):
         return None
     else:
@@ -98,7 +127,7 @@ def parse_dict_values(dictionary: dict):
                     dictionary_string += f'{value}\n'
         return dictionary_string
 
-def parse_dict_keys(dictionary: dict):
+def parse_dict_keys(dictionary: dict) -> str:
     if not dictionary or not isinstance(dictionary, dict):
         return None
     else:
@@ -163,6 +192,22 @@ def check_int_string(string: str) -> bool:
             print(f"ValueError: {e2}: string can't be converted to int.")
             return False
 
+def check_float_string(string: str) -> bool:
+    try:
+        if isinstance(string, (float, int)):
+            print("WARNING! param. is already a float or int type")
+        float(string)
+        return True
+    except TypeError as e1:
+        print(f'TypeError: {e1}')
+        return False
+    except ValueError as e2:
+        print(f'ValueError: {e2}')
+        return False
+    except AttributeError as e3:
+        print(f'AttributeError: {e3}')
+        return False
+
 def get_int(input_msg: str, retries: int = 0) -> int:
     retries += 1
     while retries > 0:
@@ -172,6 +217,18 @@ def get_int(input_msg: str, retries: int = 0) -> int:
         else:
             retries -= 1
             print(f"ERROR: {string} is not a valid input. {retries} retries left.")
+    print("no retries left.")
+    return None
+
+def get_float(input_msg: str, retries: int = 0) -> float:
+    retries += 1
+    while retries > 0:
+        string = input(input_msg)
+        if check_float_string(string):
+            return float(string)
+        else:
+            retries -= 1
+            print(f"ERROR: {string} is not a float. {retries} retries left.")
     print("no retries left.")
     return None
 
@@ -279,7 +336,7 @@ def sum_dicts_data(dict_list:list[dict], search_key:str, sub_search_key: str) ->
         except TypeError as e3:
             print(f"TypeError: {e3}")
 
-def divide(dividend:int, divider:int):
+def divide(dividend:int, divider:int) -> float:
     if divider == 0:
         return 0
     else:
@@ -308,7 +365,7 @@ def calculate_avg(dict_list: list[dict], search_key, sub_search_key) -> float:
 ########## Printing / Listing ##########
 
 #1.
-def list_names_data(dict_list: list[dict], search_key: str):
+def list_names_data(dict_list: list[dict], search_key: str) -> None:
     if not dict_list or not isinstance(dict_list, list):
         print("empty list/ not all elements in list are dicts.")
         return None
@@ -333,7 +390,7 @@ def list_column_key_values(dictionary: dict) -> None:
         for key, value in dictionary.items():
             print(f'{key.capitalize().replace("_", " ")}: {value}')
 
-def show_player_statistics(dict_list: list[dict]):
+def show_player_statistics(dict_list: list[dict]) -> None:
     if not dict_list:
         return None
     else:
@@ -372,7 +429,7 @@ def save_player_statistics_as_csv(dictionary: dict) -> bool:
     
 #4. let user select a player by name, then list achievements for that player/s
 
-def find_name_by_string_comp(dict_list: list[dict]):
+def find_name_by_string_comp(dict_list: list[dict]) -> list:
     if not dict_list:
         return None
     else: 
@@ -393,7 +450,7 @@ def find_name_by_string_comp(dict_list: list[dict]):
         print(f"no matches found for '{search_name}' in the list.")
         return None
 
-def show_player_achievements_by_name(dict_list: list[dict]):
+def show_player_achievements_by_name(dict_list: list[dict]) -> None:
     if not dict_list or not all((d, dict) for d in dict_list):
         return None
     else:
@@ -419,7 +476,7 @@ def show_player_achievements_by_name(dict_list: list[dict]):
                 return None
 
 #5. calc. & show avg. points per game (per dream team player) sorted by name (asc)
-def calc_avg_points_list_players(dict_list: list[dict]):
+def calc_avg_points_list_players(dict_list: list[dict]) -> None:
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
         return None
     else:
@@ -431,7 +488,7 @@ def calc_avg_points_list_players(dict_list: list[dict]):
 
 #6. let user select a player by name and show if he belongs to hall of fame
 
-def filter_values_from_dict_list(dict_list: list[dict], search_key, filter_string: str) -> list: # IMPLEMENT FROM LINES 424-426 TO REUTILIZE
+def filter_values_from_dict_list(dict_list: list[dict], search_key, filter_string: str) -> list:
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
         return None
     else:
@@ -439,7 +496,7 @@ def filter_values_from_dict_list(dict_list: list[dict], search_key, filter_strin
         #print(pattern)
         return [d for d in dict_list if any(re.search(pattern, item, re.I) for item in d.get(search_key, []))]
 
-def show_player_hall_of_fame(dict_list: list[dict]):
+def show_player_hall_of_fame(dict_list: list[dict]) -> None:
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
         return None
     else:
@@ -482,6 +539,46 @@ def show_highest_assists_player(dict_list: list[dict]) -> dict:
         print("\nMax. total assists player:")
         print(f'{get_formatted_key_value(max_rebounds_player, "nombre")} | {get_formatted_key_value(max_rebounds_player["estadisticas"], "asistencias_totales")}')
 
+#10. let user enter a value and show players with a higher points per game avg than it
+
+def filter_greater_or_lesser(dict_list: list[dict], search_key, search_sub_key, greater: bool = True) -> list:
+    if not dict_list:
+        return None
+    else:
+        value = get_float("Enter a points per game value (can be float):")
+        lesser_list = list()
+        greater_list = list()
+        for dictionary in dict_list:
+            #REFACTOR VALIDATION SO FUNC. INSTANTLY BREAKS WHEN INVALID PARAM. KEYS
+            if search_key in dictionary and search_sub_key in dictionary[search_key]:
+                if dictionary[search_key][search_sub_key] < value:
+                    lesser_list.append(dictionary)
+                else:
+                    greater_list.append(dictionary)
+        
+        if not lesser_list and not greater_list:
+            print("search key / search sub key not found in any dict.")
+            return None
+        else:
+            if greater: #IMPLEMENT TERNARY OPERATOR?
+                return greater_list
+            else:
+                return lesser_list
+
+def show_higher_points_per_game_list(dict_list: list[dict]) -> dict:
+    if not dict_list or not all(isinstance(d, dict) for d in dict_list):
+        return None
+    else:
+        filtered_list = filter_greater_or_lesser(dict_list, "estadisticas", "promedio_puntos_por_partido", True)
+        if not filtered_list:
+            print("no matches found for the value entered.")
+            return None
+        else:
+            for player in filtered_list:
+                print(f'{get_formatted_key_value(player, "nombre")} | {get_formatted_key_value(player["estadisticas"], "promedio_puntos_por_partido")}')
+
+#11. 
+
 
 ##########  ##########  ##########  ##########  ##########  ##########
 
@@ -500,3 +597,5 @@ players_list = read_json_file("dt.json", "jugadores")
 #show_highest_rebounds_player(players_list) # WORKING
 #show_highest_field_shots_percentage_player(players_list) # WORKING
 #show_highest_assists_player(players_list) # WORKING
+
+show_higher_points_per_game_list(players_list)
