@@ -80,7 +80,7 @@ def read_json_file(filepath: str, list_key) -> list:
     :return: a list of dictionaries read from a JSON file specified by the `filepath` parameter.
     """
     dict_lst = list()
-    with open(filepath, "r") as file:
+    with open(filepath, "r", encoding= "utf-8") as file:
         dictionary = json.load(file)
         dict_lst = dictionary[list_key] # CHANGE ACCORDING TO LIST NAME
     return dict_lst
@@ -204,7 +204,7 @@ def get_formatted_key_value(dictionary: dict, search_key: str) -> str:
     if not dictionary or not isinstance(dictionary, dict) or search_key not in dictionary:
         return None
     else:
-        return f'{search_key.capitalize()}: {dictionary.get(search_key, "N/A")}'
+        return f'{search_key.capitalize()}: {dictionary.get(search_key, "N/A")}'.replace("_", " ")
 
 ########## Sorting Functions ##########
 
@@ -236,6 +236,28 @@ def quicksort_for_dicts(origin_dict_list:list, comp_key, asc: bool = True) -> li
         return quicksort_for_dicts(lesser, comp_key, asc) + [pivot] + quicksort_for_dicts(greater, comp_key, asc)
 
 ########## Calculate Functions ##########
+
+def calculate_max_min_data_dicts(dict_list: list[dict], search_key: str, search_sub_key: str, pick_max: bool = True) -> dict:
+    if not dict_list:
+        return None
+    else:
+        try:
+            if(isinstance(dict_list, list) and all(isinstance(d , dict)) for d in dict_list):
+
+                search_value = None
+                search_index = None
+                for index, dictionary in enumerate(dict_list):
+                    value = dictionary[search_key][search_sub_key]
+                    if search_value is None or (value > search_value if pick_max else value < search_value):
+                        search_value = value
+                        search_index = index
+                return dict_list[search_index]
+        
+        except KeyError as e1:
+            print(f"KeyError: {e1} not in dict.")
+        except ValueError as e2:
+            print(f"ValueError: {e2} for '{search_key}' key ")
+                    
 
 def sum_dicts_data(dict_list:list[dict], search_key:str, sub_search_key: str) -> float:
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
@@ -433,6 +455,34 @@ def show_player_hall_of_fame(dict_list: list[dict]):
             else:
                 print("\nplayer/s do not belong to the hall of fame.\n")
 
+#7. calculate and print player w/ the highest total rebounds count
+def show_highest_rebounds_player(dict_list: list[dict]) -> dict:
+    if not dict_list or not all(isinstance(d, dict) for d in dict_list):
+        return None
+    else:
+        max_rebounds_player = calculate_max_min_data_dicts(players_list, "estadisticas", "rebotes_totales", True)
+        print("\nMax. rebounds player:")
+        print(f'{get_formatted_key_value(max_rebounds_player, "nombre")} | {get_formatted_key_value(max_rebounds_player["estadisticas"], "rebotes_totales")}')
+
+#8. calculate and print player w/ the highest field shots percentage
+def show_highest_field_shots_percentage_player(dict_list: list[dict]) -> dict:
+    if not dict_list or not all(isinstance(d, dict) for d in dict_list):
+        return None
+    else:
+        max_rebounds_player = calculate_max_min_data_dicts(players_list, "estadisticas", "porcentaje_tiros_de_campo", True)
+        print("\nMax. field shots percentage player:")
+        print(f'{get_formatted_key_value(max_rebounds_player, "nombre")} | {get_formatted_key_value(max_rebounds_player["estadisticas"], "porcentaje_tiros_de_campo")}')
+
+#9. calculate and print player w/ the highest total assists count
+def show_highest_assists_player(dict_list: list[dict]) -> dict:
+    if not dict_list or not all(isinstance(d, dict) for d in dict_list):
+        return None
+    else:
+        max_rebounds_player = calculate_max_min_data_dicts(players_list, "estadisticas", "asistencias_totales", True)
+        print("\nMax. total assists player:")
+        print(f'{get_formatted_key_value(max_rebounds_player, "nombre")} | {get_formatted_key_value(max_rebounds_player["estadisticas"], "asistencias_totales")}')
+
+
 ##########  ##########  ##########  ##########  ##########  ##########
 
 
@@ -447,3 +497,6 @@ players_list = read_json_file("dt.json", "jugadores")
 #calc_avg_points_list_players(players_list) # WORKING
 #show_player_hall_of_fame(players_list) # WORKING
 
+#show_highest_rebounds_player(players_list) # WORKING
+#show_highest_field_shots_percentage_player(players_list) # WORKING
+#show_highest_assists_player(players_list) # WORKING
