@@ -294,21 +294,25 @@ def quicksort_for_dicts(origin_dict_list:list, comp_key, asc: bool = True) -> li
 
 ########## Calculate Functions ##########
 
-def calculate_max_min_data_dicts(dict_list: list[dict], search_key: str, search_sub_key: str, pick_max: bool = True) -> dict:
+def calculate_max_min_data_dicts(dict_list: list[dict], search_key: str, search_sub_key: str, pick_max: bool = True) -> list:
     if not dict_list:
         return None
     else:
         try:
-            if(isinstance(dict_list, list) and all(isinstance(d , dict)) for d in dict_list):
+            if isinstance(dict_list, list) and all(isinstance(d , dict) for d in dict_list):
 
                 search_value = None
-                search_index = None
-                for index, dictionary in enumerate(dict_list):
+                search_list = []
+
+                for dictionary in dict_list:
                     value = dictionary[search_key][search_sub_key]
                     if search_value is None or (value > search_value if pick_max else value < search_value):
                         search_value = value
-                        search_index = index
-                return dict_list[search_index]
+                        search_list = [dictionary]
+                    elif value == search_value:
+                        search_list.append(dictionary)
+
+                return search_list
         
         except KeyError as e1:
             print(f"KeyError: {e1} not in dict.")
@@ -522,12 +526,14 @@ def show_highest_stat_player(dict_list: list[dict], search_key: str, search_sub_
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
         return None
     else:
-        max_stat_player = calculate_max_min_data_dicts(players_list, search_key, search_sub_key, True)
-        if not max_stat_player:
+        max_stat_players = calculate_max_min_data_dicts(players_list, search_key, search_sub_key, True)
+        if not max_stat_players:
             return None
         else:
-            print(f"\nMax. {stat} player:")
-            print(f'{get_formatted_key_value(max_stat_player, "nombre")} | {get_formatted_key_value(max_stat_player[search_key], search_sub_key)}')
+            print(f"\nMax. {stat} player/s:")
+            for player in max_stat_players:
+                print(f'{get_formatted_key_value(player, "nombre")} | {get_formatted_key_value(player[search_key], search_sub_key)}')
+
 
 #8. calculate and print player w/ the highest field shots percentage
 #show_highest_stat_player(players_list, "estadisticas", "porcentaje_tiros_de_campo", "field shots percentage")
@@ -601,9 +607,57 @@ def show_points_per_game_avg_less_lower(dict_list: list[dict]) -> None:
         print(f"\nAvg w/o {lowest_name}'s score ({lowest_score}):\n{calculate_avg(sorted_list[1:], 'promedio_puntos_por_partido', '', False)}")
 
 
-#17. 
+#17. REFACTOR
+
+#CALC. AUX FUNC
+def calc_max_data_non_dicts(dict_list: list[dict], search_key: str, comp_len: bool = False) -> list:
+    if not dict_list or not all(isinstance(d, dict) for d in dict_list):
+        print("empty list / not all elements in list are dicts.")
+        return None
+    else:
+        if not all(search_key in d for d in dict_list):
+            print(f"search key '{search_key}' not present in all dicts.")
+            return None
+        else:
+            max_value = dict_list[0][search_key]
+            max_list = []
+            for dictionary in dict_list:
+                if comp_len:
+                    if len(dictionary[search_key]) > len(max_value):
+                        max_value = dictionary[search_key]
+                        max_list = [dictionary]
+                    elif len(dictionary[search_key]) == len(max_value):
+                        max_list.append(dictionary)
+                else:
+                    if dictionary[search_key] > max_value:
+                        max_value = dictionary[search_key]
+                        max_list = [dictionary]
+                    elif dictionary[search_key] == max_value:
+                        max_list.append(dictionary)
+                   
+            return max_list
+
 def show_highest_achievements_player(dict_list: list[dict]) -> None:
-    pass
+    if not dict_list:
+        return None
+    else:
+        max_achievements_list = calc_max_data_non_dicts(dict_list, "logros", True)
+        print(f"\nHighest number of achievements players:\n")
+        for player in max_achievements_list:
+            print("----------------------------")
+            print(f"{get_formatted_key_value(player, 'nombre')}")
+            print("----------------------------")
+            for achievement in player["logros"]:
+                print(f'* {achievement}')
+
+
+#18. 
+#show_higher_stats_per_game_list(players_list, "estadisticas", "porcentaje_tiros_triples") # WORKING 
+
+#19. 
+#show_highest_stat_player(players_list, "estadisticas", "temporadas", "amount of played seasons") # WORKING
+
+
 ##########  ##########  ##########  ##########  ##########  ##########
 
 
@@ -631,4 +685,10 @@ players_list = read_json_file("dt.json", "jugadores")
 #show_higher_stats_per_game_list(players_list, "estadisticas", "porcentaje_tiros_libres") # WORKING -15
 
 #show_points_per_game_avg_less_lower(players_list) # WORKING -16
+
+#show_highest_achievements_player(players_list) # WORKING -17 (TO REFACTOR PRINT)
+
+#show_higher_stats_per_game_list(players_list, "estadisticas", "porcentaje_tiros_triples") # WORKING -18
+
+#show_highest_stat_player(players_list, "estadisticas", "temporadas", "amount of played seasons") # WORKING -19
 
