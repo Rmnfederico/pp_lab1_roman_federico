@@ -114,7 +114,7 @@ def read_json_file(filepath: str, list_key) -> list:
         dict_lst = dictionary[list_key] # CHANGE ACCORDING TO LIST NAME
     return dict_lst
 
-def parse_dict_values(dictionary: dict) -> str:
+def parse_dict_values(dictionary: dict, delimiter:str = ",") -> str:
     if not dictionary or not isinstance(dictionary, dict):
         return None
     else:
@@ -122,12 +122,12 @@ def parse_dict_values(dictionary: dict) -> str:
         for index, value in enumerate(dictionary.values()):
             if value and value != "":
                 if index < (len(dictionary.values())-1):
-                    dictionary_string += f'{value},'
+                    dictionary_string += f'{value}{delimiter}'
                 else:
                     dictionary_string += f'{value}\n'
         return dictionary_string
 
-def parse_dict_keys(dictionary: dict) -> str:
+def parse_dict_keys(dictionary: dict, delimiter:str = ",") -> str:
     if not dictionary or not isinstance(dictionary, dict):
         return None
     else:
@@ -135,20 +135,20 @@ def parse_dict_keys(dictionary: dict) -> str:
         for index, key in enumerate(dictionary.keys()):
             if key:
                 if index < (len(dictionary.keys())-1):
-                    dictionary_string += f'{key},'
+                    dictionary_string += f'{key}{delimiter}'
                 else:
                     dictionary_string += f'{key}\n'
         return dictionary_string
 
-def save_dict_as_csv(csv_filepath, dictionary: dict) -> bool:
+def save_dict_as_csv(csv_filepath, dictionary: dict, delimiter:str = ",") -> bool:
     if not dictionary or not isinstance(dictionary, dict):
         print("Invalid input. The parameter must be a dictionary.")
         return False
 
     try:
-        with open(csv_filepath, "w+") as file:
-            written_bytes = file.write(parse_dict_keys(dictionary))
-            written_bytes += file.write(parse_dict_values(dictionary))
+        with open(csv_filepath, "w+", encoding="utf-8") as file:
+            written_bytes = file.write(parse_dict_keys(dictionary, delimiter))
+            written_bytes += file.write(parse_dict_values(dictionary, delimiter))
 
         if written_bytes != 0:
             print(f'{written_bytes} bytes successfully written at "{csv_filepath}"')
@@ -160,6 +160,29 @@ def save_dict_as_csv(csv_filepath, dictionary: dict) -> bool:
     except (FileNotFoundError, PermissionError, IOError) as err:
         print(f'An error occurred while saving the file: {err}')
         return False
+    
+def save_dict_list_as_csv(csv_filepath, dict_list: list[dict], delimiter: str = ",") -> bool:
+    if not dict_list or not isinstance(dict_list, list) or not all(isinstance(d, dict) for d in dict_list):
+        print("empty list / not all elements in list are dicts.")
+        return False
+    else:
+        try:
+            could_write = False
+            with open(csv_filepath, "w+", encoding="utf-8") as file:
+                written_bytes = file.write(parse_dict_keys(dict_list[0], delimiter))
+                for dictionary in dict_list:
+                    written_bytes += file.write(parse_dict_values(dictionary, delimiter))
+            if written_bytes != 0:
+                print(f'{written_bytes} bytes successfully written at "{csv_filepath}"')
+                could_write = True
+                return could_write
+            else:
+                print(f'error trying to write "{csv_filepath}" file.')
+                could_write = False
+                return could_write
+        except (FileNotFoundError, PermissionError, IOError) as err:
+            print(f'An error occurred while saving the file: {err}')
+            return could_write
 
 ########## Validations / Get Inputs ##########
 
@@ -657,7 +680,7 @@ def show_highest_achievements_player(dict_list: list[dict]) -> None:
 #show_highest_stat_player(players_list, "estadisticas", "temporadas", "amount of played seasons") # WORKING
 
 #20. 
-def list_by_position_higher_stats(dict_list: list[dict]):
+def list_by_position_higher_stats(dict_list: list[dict]) -> None:
     if not dict_list:
         return None
     else:
@@ -678,10 +701,13 @@ def list_by_position_higher_stats(dict_list: list[dict]):
                     player["posicion"] = key.capitalize()
 
         #REFACTOR TO RETURN LIST SO MULTIPLE K-V PAIRS CAN BE PRINTED/LISTED
+        #TAKE OUT PRINTING RESPONSABILITY TO THESE FUNCS. RETURN LISTS AND PRIN THE SEPARATELY
+        #WITH A DECENT PRINTING FUNCTION, C'MON YOU LAZY TRASHCAN
         show_higher_stats_per_game_list(positions_list, "estadisticas", "porcentaje_tiros_de_campo")
 
 #23.
-
+def rank_by_stat_export_csv(dict_list:list[dict]):
+    pass
 
 ##########  ##########  ##########  ##########  ##########  ##########
 
@@ -718,3 +744,5 @@ players_list = read_json_file("dt.json", "jugadores")
 #show_highest_stat_player(players_list, "estadisticas", "temporadas", "amount of played seasons") # WORKING -19
 
 #list_by_position_higher_stats(players_list) # WORKING -20 -> REFACTOR PRINTED LIST
+
+#save_dict_list_as_csv("test.csv", players_list, ";") #AUX - WORKING
