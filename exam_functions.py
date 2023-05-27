@@ -315,6 +315,21 @@ def quicksort_for_dicts(origin_dict_list:list, comp_key, asc: bool = True) -> li
             greater = [x for x in dict_list[1:] if x[comp_key] < pivot[comp_key]]
         return quicksort_for_dicts(lesser, comp_key, asc) + [pivot] + quicksort_for_dicts(greater, comp_key, asc)
 
+def quicksort_for_dicts_double_key(origin_dict_list:list, comp_key: str, sub_comp_key:str, asc: bool = True) -> list:
+    if len(origin_dict_list) <= 1:
+        return origin_dict_list
+    else:
+        dict_list = origin_dict_list.copy()
+        pivot = dict_list[0]
+        if asc:
+            lesser = [x for x in dict_list[1:] if x[comp_key][sub_comp_key] <= pivot[comp_key][sub_comp_key]]
+            greater = [x for x in dict_list[1:] if x[comp_key][sub_comp_key] > pivot[comp_key][sub_comp_key]]
+        else:
+            lesser = [x for x in dict_list[1:] if x[comp_key][sub_comp_key] >= pivot[comp_key][sub_comp_key]]
+            greater = [x for x in dict_list[1:] if x[comp_key][sub_comp_key] < pivot[comp_key][sub_comp_key]]
+        return quicksort_for_dicts_double_key(lesser, comp_key, sub_comp_key, asc) + [pivot] + quicksort_for_dicts_double_key(greater, comp_key, sub_comp_key, asc)
+
+
 ########## Calculate Functions ##########
 
 def calculate_max_min_data_dicts(dict_list: list[dict], search_key: str, search_sub_key: str, pick_max: bool = True) -> list:
@@ -706,8 +721,35 @@ def list_by_position_higher_stats(dict_list: list[dict]) -> None:
         show_higher_stats_per_game_list(positions_list, "estadisticas", "porcentaje_tiros_de_campo")
 
 #23.
-def rank_by_stat_export_csv(dict_list:list[dict]):
-    pass
+def rank_by_stat_export_csv(dict_list:list[dict]) -> bool:
+    if not dict_list:
+        return None
+    else:
+        print("Ranky by:\n1.Total Points scored\n2.Total Rebounds")
+        print("3.Total assists\n4.Total steals")
+        option = get_int("Select an option (number):")
+        match option:
+            case 1:
+                selected_stat = "puntos_totales"
+            case 2:
+                selected_stat = "rebotes_totales"
+            case 3:
+                selected_stat = "asistencias_totales"
+            case 4:
+                selected_stat = "robos_totales"
+            case _:
+                print("incorrect option.")
+                return None
+        
+        sorted_list = quicksort_for_dicts_double_key(dict_list, "estadisticas", selected_stat, False)
+        for index, player in enumerate(sorted_list):
+            print(f'Rank {index+1} | {get_formatted_key_value(player, "nombre")} | {get_formatted_key_value(player["estadisticas"], selected_stat)}')
+        if save_dict_list_as_csv(f'{selected_stat}_list.csv', sorted_list, ";"):
+            return True
+        else:
+            print("list could not be saved to a csv file.")
+            return False
+
 
 ##########  ##########  ##########  ##########  ##########  ##########
 
@@ -746,3 +788,5 @@ players_list = read_json_file("dt.json", "jugadores")
 #list_by_position_higher_stats(players_list) # WORKING -20 -> REFACTOR PRINTED LIST
 
 #save_dict_list_as_csv("test.csv", players_list, ";") #AUX - WORKING
+
+#rank_by_stat_export_csv(players_list) # WORKING -23
