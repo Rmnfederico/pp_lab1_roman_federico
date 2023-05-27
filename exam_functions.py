@@ -42,53 +42,52 @@ def main_menu() -> int:
 
 
 def main_app(dict_list: list[dict]) -> None:
-    selected_list = None
+
     while True:
         
-        #TODO -> get_validated_float/int() functions
         match main_menu():
             case 1:
-                print("option 1")
+                list_names_data(dict_list, "posicion")
             case 2:
-                print("option 2")
+                show_player_statistics(dict_list)
             case 3:
-                print("option 3")
+                show_player_statistics(dict_list)
             case 4:
-                print("option 4")
+                show_player_achievements_by_name(dict_list)
             case 5:
-                print("option 5")
+                calc_avg_points_list_players(dict_list)
             case 6:
-                print("option 6")
+                show_player_hall_of_fame(dict_list)
             case 7:
-                print("option 7")
+                show_highest_stat_player(dict_list, "estadisticas", "rebotes_totales", "rebounds")
             case 8:
-                print("option 8")
+                show_highest_stat_player(dict_list, "estadisticas", "porcentaje_tiros_de_campo", "field shots percentage")
             case 9:
-                print("option 9")
+                show_highest_stat_player(dict_list, "estadisticas", "asistencias_totales", "total assists")
             case 10:
-                print("option 10")
+                show_higher_stats_per_game_list(dict_list, "estadisticas", "promedio_puntos_por_partido")
             case 11:
-                print("option 11")
+                show_higher_stats_per_game_list(dict_list, "estadisticas", "promedio_rebotes_por_partido")
             case 12:
-                print("option 12")
+                show_higher_stats_per_game_list(dict_list, "estadisticas", "promedio_asistencias_por_partido")
             case 13:
-                print("option 13")
+                show_highest_stat_player(dict_list, "estadisticas", "robos_totales", "total steals")
             case 14:
-                print("option 14")
+                show_highest_stat_player(dict_list, "estadisticas", "bloqueos_totales", "total blocks")
             case 15:
-                print("option 15")
+                show_higher_stats_per_game_list(dict_list, "estadisticas", "porcentaje_tiros_libres")
             case 16:
-                print("option 16")
+                show_points_per_game_avg_less_lower(dict_list)
             case 17:
-                print("option 17")
+                show_highest_achievements_player(dict_list)
             case 18:
-                print("option 18")
+                show_higher_stats_per_game_list(dict_list, "estadisticas", "porcentaje_tiros_triples")
             case 19:
-                print("option 19")
+                show_highest_stat_player(dict_list, "estadisticas", "temporadas", "amount of played seasons")
             case 20:
-                print("option 20")
+                list_by_position_higher_stats(dict_list)
             case 23:
-                print("option 23")
+                rank_by_stat_export_csv(dict_list)
             case 0:
                 print("program finished.")
                 break
@@ -718,12 +717,15 @@ def list_by_position_higher_stats(dict_list: list[dict]) -> None:
         #REFACTOR TO RETURN LIST SO MULTIPLE K-V PAIRS CAN BE PRINTED/LISTED
         #TAKE OUT PRINTING RESPONSABILITY TO THESE FUNCS. RETURN LISTS AND PRIN THE SEPARATELY
         #WITH A DECENT PRINTING FUNCTION, C'MON YOU LAZY TRASHCAN
-        show_higher_stats_per_game_list(positions_list, "estadisticas", "porcentaje_tiros_de_campo")
+        #show_higher_stats_per_game_list(positions_list, "estadisticas", "porcentaje_tiros_de_campo")
+
+        for player in positions_list:
+            print(f'{get_formatted_key_value(player, "nombre")} | {get_formatted_key_value(player["estadisticas"], "porcentaje_tiros_de_campo")} | {get_formatted_key_value(player, "posicion")}')
 
 #23.
 def rank_by_stat_export_csv(dict_list:list[dict]) -> bool:
     if not dict_list:
-        return None
+        return False
     else:
         print("Ranky by:\n1.Total Points scored\n2.Total Rebounds")
         print("3.Total assists\n4.Total steals")
@@ -739,7 +741,7 @@ def rank_by_stat_export_csv(dict_list:list[dict]) -> bool:
                 selected_stat = "robos_totales"
             case _:
                 print("incorrect option.")
-                return None
+                return False
         
         sorted_list = quicksort_for_dicts_double_key(dict_list, "estadisticas", selected_stat, False)
         for index, player in enumerate(sorted_list):
@@ -786,7 +788,5 @@ players_list = read_json_file("dt.json", "jugadores")
 #show_highest_stat_player(players_list, "estadisticas", "temporadas", "amount of played seasons") # WORKING -19
 
 #list_by_position_higher_stats(players_list) # WORKING -20 -> REFACTOR PRINTED LIST
-
-#save_dict_list_as_csv("test.csv", players_list, ";") #AUX - WORKING
 
 #rank_by_stat_export_csv(players_list) # WORKING -23
