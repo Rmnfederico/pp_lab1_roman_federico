@@ -610,7 +610,7 @@ def show_points_per_game_avg_less_lower(dict_list: list[dict]) -> None:
 #17. REFACTOR
 
 #CALC. AUX FUNC
-def calc_max_data_non_dicts(dict_list: list[dict], search_key: str, comp_len: bool = False) -> list:
+def calc_max_data_dicts(dict_list: list[dict], search_key: str, comp_len: bool = False) -> list:
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
         print("empty list / not all elements in list are dicts.")
         return None
@@ -641,7 +641,7 @@ def show_highest_achievements_player(dict_list: list[dict]) -> None:
     if not dict_list:
         return None
     else:
-        max_achievements_list = calc_max_data_non_dicts(dict_list, "logros", True)
+        max_achievements_list = calc_max_data_dicts(dict_list, "logros", True)
         print(f"\nHighest number of achievements players:\n")
         for player in max_achievements_list:
             print("----------------------------")
@@ -650,12 +650,37 @@ def show_highest_achievements_player(dict_list: list[dict]) -> None:
             for achievement in player["logros"]:
                 print(f'* {achievement}')
 
-
 #18. 
 #show_higher_stats_per_game_list(players_list, "estadisticas", "porcentaje_tiros_triples") # WORKING 
 
 #19. 
 #show_highest_stat_player(players_list, "estadisticas", "temporadas", "amount of played seasons") # WORKING
+
+#20. 
+def list_by_position_higher_stats(dict_list: list[dict]):
+    if not dict_list:
+        return None
+    else:
+        positions_order = {"base": 1,"escolta": 2,"alero": 3,
+                           "ala-pivot": 4,"pivot": 5}
+        positions_list = list(dict_list)
+
+        for player in positions_list:
+            for key, value in positions_order.items():
+                if str(player["posicion"]).lower() == key:
+                    player["posicion"] = value
+        
+        positions_list = quicksort_for_dicts(positions_list, "posicion")
+
+        for player in positions_list:
+            for key, value in positions_order.items():
+                if player["posicion"] == value:
+                    player["posicion"] = key.capitalize()
+
+        #REFACTOR TO RETURN LIST SO MULTIPLE K-V PAIRS CAN BE PRINTED/LISTED
+        show_higher_stats_per_game_list(positions_list, "estadisticas", "porcentaje_tiros_de_campo")
+
+#23.
 
 
 ##########  ##########  ##########  ##########  ##########  ##########
@@ -692,3 +717,4 @@ players_list = read_json_file("dt.json", "jugadores")
 
 #show_highest_stat_player(players_list, "estadisticas", "temporadas", "amount of played seasons") # WORKING -19
 
+#list_by_position_higher_stats(players_list) # WORKING -20 -> REFACTOR PRINTED LIST
