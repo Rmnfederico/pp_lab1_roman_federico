@@ -2,35 +2,37 @@ import re
 import json
 import os
 
-
 ########## Menu Funcs. ##########
 
 def print_menu() -> None:
-    print("\nmain menu (first exam):\n")
-    print("0. end program\n")
-    print("1. Opt 1")
-    print("2. Opt 2")
-    print("3. Opt 3")
-    print("4. Opt 4")
-    print("5. Opt 5")
-    print("6. Opt 6")
-    print("7. Opt 7")
-    print("8. Opt 8")
-    print("9. Opt 9")
-    print("10. Opt 10")
-    print("11. Opt 11")
-    print("12. Opt 12")
-    print("13. Opt 13")
-    print("14. Opt 14")
-    print("15. Opt 15")
-    print("16. Opt 16")
-    print("17. Opt 17")
-    print("18. Opt 18")
-    print("19. Opt 19")
-    print("20. Opt 20")
-    print("23. Opt 23")
-
-
+    print("\n┌-------------------------------------------------------------------------┐")
+    print("|\t\tMain Menu (first exam - Dream Team):".ljust(61)+"|")
+    print("├-------------------------------------------------------------------------┤")
+    print("|\t".ljust(68)+"|")
+    print("|\t0. Exit program".ljust(68)+"|")
+    print("|\t".ljust(68)+"|")
+    print("|\t1. List Dream Team players & positions".ljust(68)+"|")
+    print("|\t2. Show a player's stats by index & save to csv".ljust(68)+"|")
+    print("|\t3. Show a player's stats by index & save to csv".ljust(68)+"|")
+    print("|\t4. Search player by name and show achievements".ljust(68)+"|")
+    print("|\t5. List points per game average, sorted by ascending names".ljust(68)+"|")
+    print("|\t6. Search player by name and show if they belong to hall of fame".ljust(68)+"|")
+    print("|\t7. Show highest total rebounds player/s".ljust(68)+"|")
+    print("|\t8. Show highest field shots average player/s".ljust(68)+"|")
+    print("|\t9. Show highest total assists player/s".ljust(68)+"|")
+    print("|\t10. Enter a value and filter higher points per game avg. list".ljust(68)+"|")
+    print("|\t11. Enter a value and filter higher rebounds per game avg. list".ljust(68)+"|")
+    print("|\t12. Enter a value and filter higher assists per game avg. list".ljust(68)+"|")
+    print("|\t13. Show highest total steals player/s".ljust(68)+"|")
+    print("|\t14. Show highest total blocks player/s".ljust(68)+"|")
+    print("|\t15. Enter a value and filter higher free throws percentage list".ljust(68)+"|")
+    print("|\t16. Show team's points per game average w/o lowest points player".ljust(68)+"|")
+    print("|\t17. Show highest number of achiements player/s".ljust(68)+"|")
+    print("|\t18. Enter a value and filter higher three-pointers percentage list".ljust(68)+"|")
+    print("|\t19. Show highest number of seasons played player/s".ljust(68)+"|")
+    print("|\t20. Enter a value and filter higher field shots percentage list".ljust(68)+"|")
+    print("|\t23. Rank players by a given stat.".ljust(68)+"|")
+    print("└-------------------------------------------------------------------------┘\n")
 
 def main_menu() -> int:
     print_menu()
@@ -39,7 +41,6 @@ def main_menu() -> int:
         return int(option)
     else:
         return -1
-
 
 def main_app(dict_list: list[dict]) -> None:
 
@@ -89,7 +90,7 @@ def main_app(dict_list: list[dict]) -> None:
             case 23:
                 rank_by_stat_export_csv(dict_list)
             case 0:
-                print("program finished.")
+                print("\nSee you space cowboy.\n")
                 break
             case _:
                 print("incorrect option.")
@@ -190,7 +191,7 @@ def clear_console() -> None:
     It waits for the user to hit enter 
     to clear the console and redisplay the appropriate thing.
     """
-    _ = input('Press a key to continue...')
+    _ = input('\nPress a key to continue...')
     os.system('cls')
 
 def check_int_string(string: str) -> bool:
@@ -421,6 +422,7 @@ def list_names_data(dict_list: list[dict], search_key: str) -> None:
         for index, dictionary in enumerate(dict_list):
             if search_key in dictionary:
                 print(f'{index+1}-{get_name_data(dictionary, search_key)}')
+
 #2.
 
 def list_index_kv_pair(dict_list: list[dict], search_key) -> None:
@@ -445,6 +447,7 @@ def show_player_statistics(dict_list: list[dict]) -> None:
         player_index = get_int("Enter the index of the player to show:")
         if validate_range((player_index-1), 0, (len(dict_list)-1)):
             selected_player = dict_list[player_index-1]
+            print(f'\nShowing statistics for {selected_player["nombre"]}:\n')
             list_column_key_values(selected_player["estadisticas"])
             save_player_statistics_as_csv(selected_player)
         else:
@@ -464,7 +467,7 @@ def extract_statistics_dict(dictionary: dict) -> dict:
         return None
 
 def save_player_statistics_as_csv(dictionary: dict) -> bool:
-    option = get_string("Do you want to save player's statistics? (y/n)")
+    option = get_string("\nDo you want to save player's statistics as csv? (y/n)")
     if re.match(r"^[y]$", option, re.I):
         player_statistics_dict = extract_statistics_dict(dictionary)
         if save_dict_as_csv(f'{player_statistics_dict.get("nombre")}.csv'.replace(" ", "_"), player_statistics_dict):
@@ -534,7 +537,6 @@ def calc_avg_points_list_players(dict_list: list[dict]) -> None:
              print(f'Name: {str(player["nombre"]).ljust(15)}' + "\t|\t".center(5) + f'Promedio puntos por partido: {player["estadisticas"]["promedio_puntos_por_partido"]}')
 
 #6. let user select a player by name and show if he belongs to hall of fame
-
 def filter_values_from_dict_list(dict_list: list[dict], search_key, filter_string: str) -> list:
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
         return None
@@ -570,17 +572,6 @@ def show_highest_stat_player(dict_list: list[dict], search_key: str, search_sub_
             print(f"\nMax. {stat} player/s:")
             for player in max_stat_players:
                 print(f'{get_formatted_key_value(player, "nombre")} | {get_formatted_key_value(player[search_key], search_sub_key)}')
-
-
-#8. calculate and print player w/ the highest field shots percentage
-#show_highest_stat_player(players_list, "estadisticas", "porcentaje_tiros_de_campo", "field shots percentage")
-
-
-#9. calculate and print player w/ the highest total assists count
-#show_highest_stat_player(players_list, "estadisticas", "asistencias_totales", "total assists")
-
-
-#10. let user enter a value and show players with a higher points per game avg than it
 
 def filter_greater_or_lesser(dict_list: list[dict], search_key, search_sub_key, greater: bool = True) -> list:
     if not dict_list:
@@ -618,21 +609,6 @@ def show_higher_stats_per_game_list(dict_list: list[dict], search_key: str, sub_
             print(f'\nHigher {sub_search_key.replace("_", " ")} list:\n')
             for player in filtered_list:
                 print(f'{get_formatted_key_value(player, "nombre")} | {get_formatted_key_value(player[search_key], sub_search_key)}')
-
-#11. let user enter a value and show players with a higher rebounds per game avg than it
-#show_higher_stats_per_game_list(players_list, "estadisticas", "promedio_rebotes_por_partido") # WORKING
-
-#12. let user enter a value and show players with a assists per game count let user enter a value and show players with a higher than it
-#show_higher_stats_per_game_list(players_list, "estadisticas", "promedio_asistencias_por_partido")
-
-#13. 
-#show_highest_stat_player(players_list, "estadisticas", "robos_totales", "total steals") # WORKING
-
-#14. 
-#show_highest_stat_player(players_list, "estadisticas", "bloqueos_totales", "total blocks") # WORKING
-
-#15. 
-#show_higher_stats_per_game_list(players_list, "estadisticas", "porcentaje_tiros_libres") # WORKING
 
 #16.
 def show_points_per_game_avg_less_lower(dict_list: list[dict]) -> None:
@@ -686,12 +662,6 @@ def show_highest_achievements_player(dict_list: list[dict]) -> None:
             print("----------------------------")
             for achievement in player["logros"]:
                 print(f'* {achievement}')
-
-#18. 
-#show_higher_stats_per_game_list(players_list, "estadisticas", "porcentaje_tiros_triples") # WORKING 
-
-#19. 
-#show_highest_stat_player(players_list, "estadisticas", "temporadas", "amount of played seasons") # WORKING
 
 #20. 
 def list_by_position_higher_stats(dict_list: list[dict]) -> None:
