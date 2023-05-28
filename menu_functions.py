@@ -86,7 +86,7 @@ def main_app(dict_list: list[dict]) -> None:
             case 20:
                 list_by_position_higher_stats(dict_list)
             case 23:
-                rank_by_stat_export_csv(dict_list)
+                save_dict_list_as_csv("stats_ranking.csv",create_sub_list_stats_rankings(dict_list), ",")
             case 0:
                 print("\nSee you space cowboy.\n")
                 break

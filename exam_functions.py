@@ -504,36 +504,31 @@ def list_by_position_higher_stats(dict_list: list[dict]) -> None:
             print(f'{get_formatted_key_value(player, "nombre")} | {get_formatted_key_value(player["estadisticas"], "porcentaje_tiros_de_campo")} | {get_formatted_key_value(player, "posicion")}')
 
 #23.
-def rank_by_stat_export_csv(dict_list:list[dict]) -> bool:
-    if not dict_list:
-        return False
-    else:
-        print("\nRanky by:\n\n1. Total Points scored\n2. Total Rebounds")
-        print("3. Total Assists\n4. Total Steals")
-        option = get_int("\nSelect an option (number):")
-        match option:
-            case 1:
-                selected_stat = "puntos_totales"
-            case 2:
-                selected_stat = "rebotes_totales"
-            case 3:
-                selected_stat = "asistencias_totales"
-            case 4:
-                selected_stat = "robos_totales"
-            case _:
-                print("\nincorrect option.")
-                return False
-        
-        sorted_list = quicksort_for_dicts_double_key(dict_list, "estadisticas", selected_stat, False)
-        for index, player in enumerate(sorted_list):
-            print(f'Rank {index+1} | {get_formatted_key_value(player, "nombre")} | {get_formatted_key_value(player["estadisticas"], selected_stat)}')
-        if save_dict_list_as_csv(f'{selected_stat}_list.csv', sorted_list, ";"):
-            return True
-        else:
-            print("list could not be saved to a csv file.")
-            return False
 
+def create_sub_list_stats_rankings(dict_list: list[dict]) -> list:
+    if not dict_list:
+        return []
+    else:
+        rankings_dict_list = []
+        for player in dict_list:
+            rankings_dict_list.append({"nombre": player["nombre"]})
+        
+        stats = ["puntos_totales", "rebotes_totales", "asistencias_totales", "robos_totales"]
+        for stat in stats:
+            sorted_list = quicksort_for_dicts_double_key(dict_list, "estadisticas", stat, False)
+            for index, sorted_player in enumerate(sorted_list):
+                for player in rankings_dict_list:
+                    if player["nombre"] == sorted_player["nombre"]:
+                        player[f"{stat}_ranking"] = index + 1
+                        break
+
+        return rankings_dict_list
+                
+        
+        #print(rankings_dict_list)
 
 ##########  ##########  ##########  ##########  ##########  ##########
 
 players_list = read_json_file("dt.json", "jugadores")
+
+#save_dict_list_as_csv("stats_ranking.csv",create_sub_list_stats_rankings(players_list), ",")
