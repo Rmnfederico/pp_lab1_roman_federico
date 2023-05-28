@@ -250,26 +250,28 @@ def list_index_kv_pair(dict_list: list[dict], search_key) -> None:
         for index, player in enumerate(dict_list):
             print(f'{index+1}-{get_formatted_key_value(player, search_key)}')
 
-def list_column_key_values(dictionary: dict) -> None:
-    if not dictionary or not isinstance(dictionary, dict):
+def print_column_key_values(statistics: dict, name: str) -> None:
+    if not statistics or not isinstance(statistics, dict):
         return None
     else:
-        for key, value in dictionary.items():
+        print(f'\nShowing statistics for {name}:\n')
+        for key, value in statistics.items():
             print(f'{key.capitalize().replace("_", " ")}: {value}')
 
-def show_player_statistics(dict_list: list[dict]) -> None:
-    if not dict_list:
-        return None
+def get_player_statistics(dict_list: list[dict]) -> dict:
+    if not dict_list or not all(isinstance(d, dict) for d in dict_list):
+        return {}
     else:
         list_index_kv_pair(dict_list, "nombre")
         player_index = get_int("Enter the index of the player to show:")
         if validate_range((player_index-1), 0, (len(dict_list)-1)):
             selected_player = dict_list[player_index-1]
-            print(f'\nShowing statistics for {selected_player["nombre"]}:\n')
-            list_column_key_values(selected_player["estadisticas"])
-            save_player_statistics_as_csv(selected_player)
-        else:
+            print_column_key_values(selected_player["estadisticas"], selected_player["nombre"]) # USE THIS FUNC. IN MENU, NOT HERE
+            #save_player_statistics_as_csv(selected_player) # REMOVE FROM HERE, USE IN MENU AS OPTION 3
+            return selected_player
+        else: 
             print("index not found in list.")
+            return {}
 
 #3. Save name, position & player statistics
 def extract_statistics_dict(dictionary: dict) -> dict:
@@ -284,7 +286,7 @@ def extract_statistics_dict(dictionary: dict) -> dict:
         return None
 
 def save_player_statistics_as_csv(dictionary: dict) -> bool:
-    option = get_string("\nDo you want to save player's statistics as csv? (y/n)")
+    option = get_string(f"\nDo you want to save {dictionary['nombre']}'s statistics as csv? (y/n)")
     if re.match(r"^[y]$", option, re.I):
         player_statistics_dict = extract_statistics_dict(dictionary)
         if save_dict_as_csv(f'{player_statistics_dict.get("nombre")}.csv'.replace(" ", "_"), player_statistics_dict):
@@ -504,7 +506,6 @@ def list_by_position_higher_stats(dict_list: list[dict]) -> None:
             print(f'{get_formatted_key_value(player, "nombre")} | {get_formatted_key_value(player["estadisticas"], "porcentaje_tiros_de_campo")} | {get_formatted_key_value(player, "posicion")}')
 
 #23.
-
 def create_sub_list_stats_rankings(dict_list: list[dict]) -> list:
     if not dict_list:
         return []
@@ -523,12 +524,7 @@ def create_sub_list_stats_rankings(dict_list: list[dict]) -> list:
                         break
 
         return rankings_dict_list
-                
-        
-        #print(rankings_dict_list)
 
 ##########  ##########  ##########  ##########  ##########  ##########
 
 players_list = read_json_file("dt.json", "jugadores")
-
-#save_dict_list_as_csv("stats_ranking.csv",create_sub_list_stats_rankings(players_list), ",")

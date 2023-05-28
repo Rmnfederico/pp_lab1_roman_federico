@@ -3,33 +3,34 @@ from exam_functions import *
 ########## Menu Funcs. ##########
 
 def print_menu() -> None:
+    justification = 68
     print("\n┌-------------------------------------------------------------------------┐")
     print("|\t\tMain Menu (first exam - Dream Team):".ljust(61)+"|")
     print("├-------------------------------------------------------------------------┤")
-    print("|\t".ljust(68)+"|")
-    print("|\t0. Exit program".ljust(68)+"|")
-    print("|\t".ljust(68)+"|")
-    print("|\t1. List Dream Team players & positions".ljust(68)+"|")
-    print("|\t2. Show a player's stats by index & save to csv".ljust(68)+"|")
-    print("|\t3. Show a player's stats by index & save to csv".ljust(68)+"|")
-    print("|\t4. Search player by name and show achievements".ljust(68)+"|")
-    print("|\t5. List points per game average, sorted by ascending names".ljust(68)+"|")
-    print("|\t6. Search player by name and show if they belong to hall of fame".ljust(68)+"|")
-    print("|\t7. Show highest total rebounds player/s".ljust(68)+"|")
-    print("|\t8. Show highest field shots average player/s".ljust(68)+"|")
-    print("|\t9. Show highest total assists player/s".ljust(68)+"|")
-    print("|\t10. Enter a value and filter higher points per game avg. list".ljust(68)+"|")
-    print("|\t11. Enter a value and filter higher rebounds per game avg. list".ljust(68)+"|")
-    print("|\t12. Enter a value and filter higher assists per game avg. list".ljust(68)+"|")
-    print("|\t13. Show highest total steals player/s".ljust(68)+"|")
-    print("|\t14. Show highest total blocks player/s".ljust(68)+"|")
-    print("|\t15. Enter a value and filter higher free throws percentage list".ljust(68)+"|")
-    print("|\t16. Show team's points per game average w/o lowest points player".ljust(68)+"|")
-    print("|\t17. Show highest number of achiements player/s".ljust(68)+"|")
-    print("|\t18. Enter a value and filter higher three-pointers percentage list".ljust(68)+"|")
-    print("|\t19. Show highest number of seasons played player/s".ljust(68)+"|")
-    print("|\t20. Enter a value and filter higher field shots percentage list".ljust(68)+"|")
-    print("|\t23. Rank players by a given stat.".ljust(68)+"|")
+    print("|\t".ljust(justification)+"|")
+    print("|\t0. Exit program".ljust(justification)+"|")
+    print("|\t".ljust(justification)+"|")
+    print("|\t1. List Dream Team players & positions".ljust(justification)+"|")
+    print("|\t2. Show a player's stats by index & save to csv".ljust(justification)+"|")
+    print("|\t3. Save option 3 as csv".ljust(justification)+"|")
+    print("|\t4. Search player by name and show achievements".ljust(justification)+"|")
+    print("|\t5. List points per game average, sorted by ascending names".ljust(justification)+"|")
+    print("|\t6. Search player by name and show if they belong to hall of fame".ljust(justification)+"|")
+    print("|\t7. Show highest total rebounds player/s".ljust(justification)+"|")
+    print("|\t8. Show highest field shots average player/s".ljust(justification)+"|")
+    print("|\t9. Show highest total assists player/s".ljust(justification)+"|")
+    print("|\t10. Enter a value and filter higher points per game avg. list".ljust(justification)+"|")
+    print("|\t11. Enter a value and filter higher rebounds per game avg. list".ljust(justification)+"|")
+    print("|\t12. Enter a value and filter higher assists per game avg. list".ljust(justification)+"|")
+    print("|\t13. Show highest total steals player/s".ljust(justification)+"|")
+    print("|\t14. Show highest total blocks player/s".ljust(justification)+"|")
+    print("|\t15. Enter a value and filter higher free throws percentage list".ljust(justification)+"|")
+    print("|\t16. Show team's points per game average w/o lowest points player".ljust(justification)+"|")
+    print("|\t17. Show highest number of achiements player/s".ljust(justification)+"|")
+    print("|\t18. Enter a value and filter higher three-pointers percentage list".ljust(justification)+"|")
+    print("|\t19. Show highest number of seasons played player/s".ljust(justification)+"|")
+    print("|\t20. Enter a value and filter higher field shots percentage list".ljust(justification)+"|")
+    print("|\t23. Rank players by stats and save as csv.".ljust(justification)+"|")
     print("└-------------------------------------------------------------------------┘\n")
 
 def main_menu() -> int:
@@ -41,16 +42,22 @@ def main_menu() -> int:
         return -1
 
 def main_app(dict_list: list[dict]) -> None:
-
+    
+    option_two = False
     while True:
-        
         match main_menu():
             case 1:
                 list_names_data(dict_list, "posicion")
             case 2:
-                show_player_statistics(dict_list)
+                selected_player = get_player_statistics(dict_list)
+                print_column_key_values(selected_player["estadisticas"], selected_player["nombre"])
+                option_two = True
             case 3:
-                show_player_statistics(dict_list)
+                if option_two:
+                    save_player_statistics_as_csv(selected_player)
+                    selected_player, option_two = None, False
+                else:
+                    print("No player selected in option 2 to save.")
             case 4:
                 show_player_achievements_by_name(dict_list)
             case 5:
