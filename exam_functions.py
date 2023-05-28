@@ -266,8 +266,6 @@ def get_player_statistics(dict_list: list[dict]) -> dict:
         player_index = get_int("Enter the index of the player to show:")
         if validate_range((player_index-1), 0, (len(dict_list)-1)):
             selected_player = dict_list[player_index-1]
-            print_column_key_values(selected_player["estadisticas"], selected_player["nombre"]) # USE THIS FUNC. IN MENU, NOT HERE
-            #save_player_statistics_as_csv(selected_player) # REMOVE FROM HERE, USE IN MENU AS OPTION 3
             return selected_player
         else: 
             print("index not found in list.")
@@ -286,7 +284,7 @@ def extract_statistics_dict(dictionary: dict) -> dict:
         return None
 
 def save_player_statistics_as_csv(dictionary: dict) -> bool:
-    option = get_string(f"\nDo you want to save {dictionary['nombre']}'s statistics as csv? (y/n)")
+    option = get_string(f"\nDo you want to save {dictionary['nombre']}'s statistics as csv? (y/n) ")
     if re.match(r"^[y]$", option, re.I):
         player_statistics_dict = extract_statistics_dict(dictionary)
         if save_dict_as_csv(f'{player_statistics_dict.get("nombre")}.csv'.replace(" ", "_"), player_statistics_dict):
