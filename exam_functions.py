@@ -271,7 +271,7 @@ def show_player_statistics(dict_list: list[dict]) -> None:
         else:
             print("index not found in list.")
 
-#3. Save name, position, player statistics
+#3. Save name, position & player statistics
 def extract_statistics_dict(dictionary: dict) -> dict:
     if dictionary and isinstance(dictionary, dict):
         player_statistics_dict = dict()
@@ -325,18 +325,18 @@ def show_player_achievements_by_name(dict_list: list[dict]) -> None:
             return None
         elif len(filtered_list) == 1:
             for achievement in filtered_list[0]["logros"]:
-                print(achievement) 
+                print(f'* {achievement}') 
         else:
             sub_option = get_int("\nselect index from found players or 0 to print all:")
             if sub_option == 0:
                 for player in filtered_list:
-                    print(f'\nAchievements for {player["nombre"]}:')
-                    for achievements in player["logros"]:
-                        print(achievements)
+                    print(f'\nAchievements for {player["nombre"]}:\n')
+                    for achievement in player["logros"]:
+                        print(f'* {achievement}') 
             elif validate_range(sub_option, 1, len(filtered_list)):
                 print(f'\nAchievements for {filtered_list[sub_option-1].get("nombre")}:\n')
                 for achievement in filtered_list[sub_option-1]["logros"]:
-                    print(achievement)
+                    print(f'* {achievement}') 
             else:
                 print(f"index {sub_option} not found.")
                 return None
@@ -500,11 +500,6 @@ def list_by_position_higher_stats(dict_list: list[dict]) -> None:
                 if player["posicion"] == value:
                     player["posicion"] = key.capitalize()
 
-        #REFACTOR TO RETURN LIST SO MULTIPLE K-V PAIRS CAN BE PRINTED/LISTED
-        #TAKE OUT PRINTING RESPONSABILITY TO THESE FUNCS. RETURN LISTS AND PRIN THE SEPARATELY
-        #WITH A DECENT PRINTING FUNCTION, C'MON YOU LAZY TRASHCAN
-        #show_higher_stats_per_game_list(positions_list, "estadisticas", "porcentaje_tiros_de_campo")
-
         for player in positions_list:
             print(f'{get_formatted_key_value(player, "nombre")} | {get_formatted_key_value(player["estadisticas"], "porcentaje_tiros_de_campo")} | {get_formatted_key_value(player, "posicion")}')
 
@@ -513,9 +508,9 @@ def rank_by_stat_export_csv(dict_list:list[dict]) -> bool:
     if not dict_list:
         return False
     else:
-        print("Ranky by:\n1.Total Points scored\n2.Total Rebounds")
-        print("3.Total assists\n4.Total steals")
-        option = get_int("Select an option (number):")
+        print("\nRanky by:\n\n1. Total Points scored\n2. Total Rebounds")
+        print("3. Total Assists\n4. Total Steals")
+        option = get_int("\nSelect an option (number):")
         match option:
             case 1:
                 selected_stat = "puntos_totales"
@@ -526,7 +521,7 @@ def rank_by_stat_export_csv(dict_list:list[dict]) -> bool:
             case 4:
                 selected_stat = "robos_totales"
             case _:
-                print("incorrect option.")
+                print("\nincorrect option.")
                 return False
         
         sorted_list = quicksort_for_dicts_double_key(dict_list, "estadisticas", selected_stat, False)
