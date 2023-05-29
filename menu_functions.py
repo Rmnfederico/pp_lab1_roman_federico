@@ -3,6 +3,9 @@ from exam_functions import *
 ########## Menu Funcs. ##########
 
 def print_menu() -> None:
+    """
+    This function prints a menu with various options for a program related to a basketball team.
+    """
     justification = 68
     print("\n┌-------------------------------------------------------------------------┐")
     print("|\t\tMain Menu (first exam - Dream Team):".ljust(61)+"|")
@@ -34,6 +37,13 @@ def print_menu() -> None:
     print("└-------------------------------------------------------------------------┘\n")
 
 def main_menu() -> int:
+    """
+    The function displays a menu, prompts the user for an option, and returns the option as an integer
+    if it is a valid input.
+    :return: The function `main_menu()` returns an integer value. If the user enters a valid option (a
+    number between 0 and 20, or 23), the function returns that integer value. If the user enters an
+    invalid option, the function returns -1.
+    """
     print_menu()
     option: str = input("Enter your option:")
     if re.match(r'^(?:[0-9]|1[0-9]|20|23)$', option):
@@ -42,6 +52,13 @@ def main_menu() -> int:
         return -1
 
 def main_app(dict_list: list[dict]) -> None:
+    """
+    This is the main function of a Python program that provides various options to display and analyze
+    basketball player statistics.
+    
+    :param dict_list: A list of dictionaries containing basketball player statistics
+    :type dict_list: list[dict]
+    """
 
     option_two = False
     stats = "estadisticas"
