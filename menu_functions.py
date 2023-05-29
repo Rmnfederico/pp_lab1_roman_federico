@@ -61,15 +61,15 @@ def main_app(dict_list: list[dict]) -> None:
             case 4:
                 show_player_achievements_by_name(dict_list)
             case 5:
-                calc_avg_points_list_players(dict_list)
+                list_name_stat(calc_avg_points_list_players(dict_list), "promedio_puntos_por_partido")
             case 6:
                 show_player_hall_of_fame(dict_list)
             case 7:
-                show_highest_stat_player(dict_list, "estadisticas", "rebotes_totales", "rebounds")
+                list_name_stat(get_highest_stat_player(dict_list, "estadisticas", "rebotes_totales"), "rebotes_totales", "\nMax. rebounds player/s:")
             case 8:
-                show_highest_stat_player(dict_list, "estadisticas", "porcentaje_tiros_de_campo", "field shots percentage")
+                list_name_stat(get_highest_stat_player(dict_list, "estadisticas", "porcentaje_tiros_de_campo"),"porcentaje_tiros_de_campo","Max. field shots percentage player/s")
             case 9:
-                show_highest_stat_player(dict_list, "estadisticas", "asistencias_totales", "total assists")
+                list_name_stat(get_highest_stat_player(dict_list, "estadisticas", "asistencias_totales"),"asistencias_totales","Max. total assists player/s")
             case 10:
                 show_higher_stats_per_game_list(dict_list, "estadisticas", "promedio_puntos_por_partido")
             case 11:
@@ -77,9 +77,11 @@ def main_app(dict_list: list[dict]) -> None:
             case 12:
                 show_higher_stats_per_game_list(dict_list, "estadisticas", "promedio_asistencias_por_partido")
             case 13:
-                show_highest_stat_player(dict_list, "estadisticas", "robos_totales", "total steals")
+                #show_highest_stat_player(dict_list, "estadisticas", "robos_totales", "total steals")
+                pass
             case 14:
-                show_highest_stat_player(dict_list, "estadisticas", "bloqueos_totales", "total blocks")
+                #show_highest_stat_player(dict_list, "estadisticas", "bloqueos_totales", "total blocks")
+                pass
             case 15:
                 show_higher_stats_per_game_list(dict_list, "estadisticas", "porcentaje_tiros_libres")
             case 16:
@@ -89,7 +91,8 @@ def main_app(dict_list: list[dict]) -> None:
             case 18:
                 show_higher_stats_per_game_list(dict_list, "estadisticas", "porcentaje_tiros_triples")
             case 19:
-                show_highest_stat_player(dict_list, "estadisticas", "temporadas", "amount of played seasons")
+                #show_highest_stat_player(dict_list, "estadisticas", "temporadas", "amount of played seasons")
+                pass
             case 20:
                 list_by_position_higher_stats(dict_list)
             case 23:

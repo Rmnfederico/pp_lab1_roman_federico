@@ -174,7 +174,6 @@ def calculate_max_min_data_dicts(dict_list: list[dict], search_key: str, search_
             print(f"KeyError: {e1} not in dict.")
         except ValueError as e2:
             print(f"ValueError: {e2} for '{search_key}' key ")
-                    
 
 def sum_dicts_data(dict_list:list[dict], search_key:str, sub_search_key: str, double_key: bool = True) -> float:
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
@@ -231,6 +230,18 @@ def calculate_avg(dict_list: list[dict], search_key, sub_search_key, double_key:
 
 ########## Printing / Listing ##########
 
+def list_name_stat(dict_list: list[dict], stat: str, header:str = None) -> None:
+    if not dict_list or not all(isinstance(d, dict) for d in dict_list):
+        return None
+    else:
+        if header:
+            print(f'\n{header}:')
+        for dictionary in dict_list:
+            if stat in dictionary["estadisticas"]:
+                print(f'{get_formatted_key_value(dictionary, "nombre")}'+" | "+f'{get_formatted_key_value(dictionary["estadisticas"], stat)}')
+            else:
+                print("stat not present in all dictionaries.")
+                return None
 #1.
 def list_names_data(dict_list: list[dict], search_key: str) -> None:
     if not dict_list or not isinstance(dict_list, list):
@@ -342,15 +353,15 @@ def show_player_achievements_by_name(dict_list: list[dict]) -> None:
                 return None
 
 #5. calc. & show avg. points per game (per dream team player) sorted by name (asc)
-def calc_avg_points_list_players(dict_list: list[dict]) -> None:
+def calc_avg_points_list_players(dict_list: list[dict]) -> list:
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
-        return None
+        print("empty list/ not all elements in list are dicts.")
+        return []
     else:
         sorted_list = quicksort_for_dicts(dict_list, "nombre", True)
         points_avg = calculate_avg(sorted_list, "estadisticas", "promedio_puntos_por_partido")
         print(f'\nThe average points per game for the whole team is {points_avg}\n')
-        for player in sorted_list:
-             print(f'Name: {str(player["nombre"]).ljust(15)}' + "\t|\t".center(5) + f'Promedio puntos por partido: {player["estadisticas"]["promedio_puntos_por_partido"]}')
+        return sorted_list
 
 #6. let user select a player by name and show if he belongs to hall of fame
 def filter_values_from_dict_list(dict_list: list[dict], search_key, filter_string: str) -> list:
@@ -362,6 +373,7 @@ def filter_values_from_dict_list(dict_list: list[dict], search_key, filter_strin
 
 def show_player_hall_of_fame(dict_list: list[dict]) -> None:
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
+        print("empty list/ not all elements in list are dicts.")
         return None
     else:
         filtered_list = find_name_by_string_comp(dict_list)
@@ -377,21 +389,19 @@ def show_player_hall_of_fame(dict_list: list[dict]) -> None:
                 print("\nplayer/s do not belong to the hall of fame.\n")
 
 #7. calculate and print player w/ the highest total rebounds count
-def show_highest_stat_player(dict_list: list[dict], search_key: str, search_sub_key: str, stat) -> dict:
+def get_highest_stat_player(dict_list: list[dict], search_key: str, search_sub_key: str) -> list:
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
-        return None
+        return []
     else:
         max_stat_players = calculate_max_min_data_dicts(players_list, search_key, search_sub_key, True)
         if not max_stat_players:
-            return None
+            return []
         else:
-            print(f"\nMax. {stat} player/s:")
-            for player in max_stat_players:
-                print(f'{get_formatted_key_value(player, "nombre")} | {get_formatted_key_value(player[search_key], search_sub_key)}')
+            return max_stat_players
 
 def filter_greater_or_lesser(dict_list: list[dict], search_key, search_sub_key, greater: bool = True) -> list:
     if not dict_list:
-        return None
+        return []
     else:
         value = get_float("Enter a points per game value (can be float):")
         lesser_list = list()
@@ -406,7 +416,7 @@ def filter_greater_or_lesser(dict_list: list[dict], search_key, search_sub_key, 
         
         if not lesser_list and not greater_list:
             print("search key / search sub key not found in any dict.")
-            return None
+            return []
         else:
             if greater: #IMPLEMENT TERNARY OPERATOR?
                 return greater_list
