@@ -18,6 +18,18 @@ def read_json_file(filepath: str, list_key) -> list:
     return dict_lst
 
 def parse_dict_values(dictionary: dict, delimiter:str = ",") -> str:
+    """
+    The function takes a dictionary and a delimiter as input, and returns a string of non-empty values
+    from the dictionary separated by the delimiter.
+    
+    :param dictionary: A dictionary object that contains key-value pairs
+    :type dictionary: dict
+    :param delimiter: The delimiter parameter is a string that specifies the character(s) to be used to
+    separate the values in the output string. By default, it is set to ",", defaults to ,
+    :type delimiter: str (optional)
+    :return: a string that contains the non-empty values of the input dictionary separated by the
+    specified delimiter. If the input is not a dictionary or is empty, the function returns None.
+    """
     if not dictionary or not isinstance(dictionary, dict):
         return None
     else:
@@ -31,6 +43,19 @@ def parse_dict_values(dictionary: dict, delimiter:str = ",") -> str:
         return dictionary_string
 
 def parse_dict_keys(dictionary: dict, delimiter:str = ",") -> str:
+    """
+    The function takes a dictionary and a delimiter as input, and returns a string of the dictionary
+    keys separated by the delimiter.
+    
+    :param dictionary: A dictionary object that you want to parse the keys of
+    :type dictionary: dict
+    :param delimiter: The delimiter parameter is a string that specifies the character(s) to be used to
+    separate the keys in the output string. By default, it is set to ",", defaults to ,
+    :type delimiter: str (optional)
+    :return: a string that contains all the keys of the input dictionary separated by a delimiter
+    (default is comma) and a newline character at the end. If the input is not a dictionary or is empty,
+    the function returns None.
+    """
     if not dictionary or not isinstance(dictionary, dict):
         return None
     else:
@@ -44,6 +69,19 @@ def parse_dict_keys(dictionary: dict, delimiter:str = ",") -> str:
         return dictionary_string
 
 def save_dict_as_csv(csv_filepath, dictionary: dict, delimiter:str = ",") -> bool:
+    """
+    This function saves a dictionary as a CSV file with a specified delimiter.
+    
+    :param csv_filepath: The file path and name where the CSV file will be saved
+    :param dictionary: The dictionary parameter is a dictionary object that contains key-value pairs to
+    be saved as a CSV file
+    :type dictionary: dict
+    :param delimiter: The delimiter parameter is a string that specifies the character used to separate
+    values in the CSV file. By default, it is set to "," (comma), defaults to ,
+    :type delimiter: str (optional)
+    :return: a boolean value indicating whether the dictionary was successfully saved as a CSV file or
+    not.
+    """
     if not dictionary or not isinstance(dictionary, dict):
         print("Invalid input. The parameter must be a dictionary.")
         return False
@@ -65,6 +103,18 @@ def save_dict_as_csv(csv_filepath, dictionary: dict, delimiter:str = ",") -> boo
         return False
     
 def save_dict_list_as_csv(csv_filepath, dict_list: list[dict], delimiter: str = ",") -> bool:
+    """
+    This function saves a list of dictionaries as a CSV file.
+    
+    :param csv_filepath: The file path where the CSV file will be saved
+    :param dict_list: A list of dictionaries that will be saved as a CSV file
+    :type dict_list: list[dict]
+    :param delimiter: The delimiter parameter is a string that specifies the character used to separate
+    values in the CSV file. By default, it is set to "," (comma), but it can be changed to any other
+    character such as ";" (semicolon) or "\t" (tab), defaults to ,
+    :type delimiter: str (optional)
+    :return: a boolean value indicating whether the operation was successful or not.
+    """
     if not dict_list or not isinstance(dict_list, list) or not all(isinstance(d, dict) for d in dict_list):
         print("empty list / not all elements in list are dicts.")
         return False
