@@ -6,8 +6,8 @@ from files_handling_functions import *
 
 def clear_console() -> None:
     """
-    It waits for the user to hit enter 
-    to clear the console and redisplay the appropriate thing.
+    waits for the user to press any key 
+    to clear the console and continue program execution.
     """
     _ = input('\nPress a key to continue...')
     os.system('cls')
@@ -152,7 +152,7 @@ def quicksort_for_dicts_double_key(origin_dict_list:list, comp_key: str, sub_com
 
 def calculate_max_min_data_dicts(dict_list: list[dict], search_key: str, search_sub_key: str, pick_max: bool = True) -> list:
     if not dict_list:
-        return None
+        return []
     else:
         try:
             if isinstance(dict_list, list) and all(isinstance(d , dict) for d in dict_list):
@@ -292,7 +292,7 @@ def extract_statistics_dict(dictionary: dict) -> dict:
             player_statistics_dict[key] = value
         return player_statistics_dict
     else:
-        return None
+        return {}
 
 def save_player_statistics_as_csv(dictionary: dict) -> bool:
     option = get_string(f"\nDo you want to save {dictionary['nombre']}'s statistics as csv? (y/n) ")
@@ -308,7 +308,7 @@ def save_player_statistics_as_csv(dictionary: dict) -> bool:
 #4. let user select a player by name, then list achievements for that player/s
 def find_name_by_string_comp(dict_list: list[dict]) -> list:
     if not dict_list:
-        return None
+        return []
     else: 
         search_name = get_string("enter the name of the player:")
         if search_name:
@@ -325,7 +325,7 @@ def find_name_by_string_comp(dict_list: list[dict]) -> list:
         return filtered_list
     else:
         print(f"no matches found for '{search_name}' in the list.")
-        return None
+        return []
 
 def show_player_achievements_by_name(dict_list: list[dict]) -> None:
     if not dict_list or not all((d, dict) for d in dict_list):
@@ -423,19 +423,16 @@ def filter_greater_or_lesser(dict_list: list[dict], search_key, search_sub_key, 
             else:
                 return lesser_list
 
-def show_higher_stats_per_game_list(dict_list: list[dict], search_key: str, sub_search_key: str) -> None:
+def get_higher_stats_per_game_list(dict_list: list[dict], search_key: str, sub_search_key: str) -> list:
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
-        return None
+        return []
     else:
         filtered_list = filter_greater_or_lesser(dict_list, search_key, sub_search_key, True)
         if not filtered_list:
-            print("no matches found for the value entered.")
-            return None
+            print("no matches found for the entered value.")
+            return []
         else:
-            print(f'\nHigher {sub_search_key.replace("_", " ")} list:\n')
-            for player in filtered_list:
-                print(f'{get_formatted_key_value(player, "nombre")} | {get_formatted_key_value(player[search_key], sub_search_key)}')
-
+            return filtered_list
 #16.
 def show_points_per_game_avg_less_lower(dict_list: list[dict]) -> None:
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
