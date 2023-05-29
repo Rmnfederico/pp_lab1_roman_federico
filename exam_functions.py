@@ -235,7 +235,7 @@ def list_name_stat(dict_list: list[dict], stat: str, header:str = None) -> None:
         return None
     else:
         if header:
-            print(f'\n{header}:')
+            print(f'\n{header}:\n')
         for dictionary in dict_list:
             if stat in dictionary["estadisticas"]:
                 print(f'{get_formatted_key_value(dictionary, "nombre")}'+" | "+f'{get_formatted_key_value(dictionary["estadisticas"], stat)}')
