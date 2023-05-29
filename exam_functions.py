@@ -836,10 +836,8 @@ def show_points_per_game_avg_less_lower(dict_list: list[dict]) -> None:
         lowest_name, lowest_score = sorted_list[0]['nombre'], sorted_list[0]['promedio_puntos_por_partido']
         print(f"\nAvg w/o {lowest_name}'s score ({lowest_score}):\n{calculate_avg(sorted_list[1:], 'promedio_puntos_por_partido', '', False)}")
 
+#17. 
 
-#17. REFACTOR
-
-#CALC. AUX FUNC
 def calc_max_data_dicts(dict_list: list[dict], search_key: str, comp_len: bool = False) -> list:
     """
     This function takes a list of dictionaries, a search key, and an optional boolean flag, and returns
