@@ -13,6 +13,16 @@ def clear_console() -> None:
     os.system('cls')
 
 def check_int_string(string: str) -> bool:
+    """
+    The function checks if a given string can be converted to an integer.
+    
+    :param string: The input parameter to the function `check_int_string()`. It is expected to be a
+    string or an integer. If it is a string, the function checks if it can be converted to an integer.
+    If it is already an integer, the function returns `True` with a warning message. If
+    :type string: str
+    :return: a boolean value. It returns True if the input string can be converted to an integer, and
+    False otherwise.
+    """
     try:
         #iterable objects that can be traversed with "for in" and could contain ints
         if isinstance(string, (list, tuple)):
@@ -34,6 +44,17 @@ def check_int_string(string: str) -> bool:
             return False
 
 def check_float_string(string: str) -> bool:
+    """
+    The function checks if a given string can be converted to a float. 
+    returns True if it can, and False otherwise.
+    
+    :param string: A string that may or may not represent a float number
+    :type string: str
+    :return: a boolean value indicating whether the input string can be converted to a float or not. If
+    the input string is already a float or int type, a warning message is printed but the function still
+    returns True. If there is a TypeError, ValueError, or AttributeError during the conversion process,
+    an error message is printed and the function returns False.
+    """
     try:
         if isinstance(string, (float, int)):
             print("WARNING! param. is already a float or int type")
@@ -50,6 +71,19 @@ def check_float_string(string: str) -> bool:
         return False
 
 def get_int(input_msg: str, retries: int = 0) -> int:
+    """
+    This function prompts the user to input an integer and allows
+    for a specified number of retries if the input is invalid.
+    
+    :param input_msg: A string message that will be displayed to the user when asking for input
+    :type input_msg: str
+    :param retries: The `retries` parameter is an optional integer parameter that specifies the number
+    of times the user can retry entering a valid input before the function returns `None`. If `retries`
+    is not specified, it defaults to 0, defaults to 0
+    :type retries: int (optional)
+    :return: an integer value if a valid integer input is provided by the user, and it is returning None
+    if no valid input is provided within the specified number of retries.
+    """
     retries += 1
     while retries > 0:
         string = input(input_msg)
@@ -62,6 +96,21 @@ def get_int(input_msg: str, retries: int = 0) -> int:
     return None
 
 def get_float(input_msg: str, retries: int = 0) -> float:
+    """
+    The function takes an input message and optional number of retries, prompts the user to
+    input a float value, and returns the float value or None if the input is not a valid float after the
+    specified number of retries.
+    
+    :param input_msg: A string message that will be displayed to the user when asking for input
+    :type input_msg: str
+    :param retries: An integer that specifies the number of times the user
+    can retry entering a valid float value before the function returns `None`. It has a default value of
+    0, which means that if the user enters an invalid float value, the function will not allow any
+    retries and, defaults to 0
+    :type retries: int (optional)
+    :return: a float value if the input string can be converted to a float, and None if all retries have
+    been exhausted and the input string cannot be converted to a float.
+    """
     retries += 1
     while retries > 0:
         string = input(input_msg)
@@ -74,12 +123,38 @@ def get_float(input_msg: str, retries: int = 0) -> float:
     return None
 
 def validate_range(number: int, min, max) -> bool:
+    """
+    The function validates if a given number is within a specified range.
+    
+    :param number: an integer that needs to be validated within a certain range
+    :type number: int
+    :param min: The minimum value that the "number" parameter can take
+    :param max: The parameter "max" is the maximum value that the "number" parameter can take. It is
+    used in the function "validate_range" to check if the "number" parameter is within the specified
+    range (between "min" and "max")
+    :return: a boolean value (True or False) depending on whether the input number is within the
+    specified range (between min and max, inclusive) and is an integer.
+    """
     if not isinstance(number, int) or number < min or number > max:
         return False
     else:
         return True
     
 def get_string(input_msg: str,retries: int = 0) -> str:
+    """
+    Takes an input message and number of retries as arguments, prompts the
+    user to input a non-empty string, and returns the string or None if all retries are exhausted.
+    
+    :param input_msg: A string that will be displayed as a prompt to the user when asking for input
+    :type input_msg: str
+    :param retries: The parameter "retries" is an integer that specifies the number of times the user
+    can retry entering a non-empty string if they initially enter an empty string, defaults to 0
+    :type retries: int (optional)
+    :return: a string value. If the user enters a non-empty string, the function returns that string. If
+    the user enters an empty string, the function prompts the user to enter a non-empty string again, up
+    to the number of retries specified. If the user still enters an empty string after all retries, the
+    function returns None.
+    """
     retries += 1
     while retries > 0:
         string = input(input_msg)
@@ -92,6 +167,22 @@ def get_string(input_msg: str,retries: int = 0) -> str:
     return None
 
 def get_name_data(dictionary: dict, search_key: str) -> str:
+    """
+    The function takes a dictionary and a search key as input and returns a formatted string containing
+    the name and value of the search key if it exists in the dictionary.
+    
+    :param dictionary: A dictionary containing information about a person, including their name and
+    other attributes
+    :type dictionary: dict
+    :param search_key: The parameter search_key is a string that represents the key that we want to
+    search for in the dictionary. It is used to retrieve the value associated with that key in the
+    dictionary
+    :type search_key: str
+    :return: a formatted string that includes the name from the dictionary and the value associated with
+    the search_key parameter. The name is left-justified and padded with spaces to a length of 15
+    characters, and the search_key is capitalized. If the search_key is not found in the dictionary, a
+    KeyError is raised.
+    """
     try:
         if search_key in dictionary and isinstance(dictionary, dict):
             return f'Name: {str(dictionary["nombre"]).ljust(15)}' + "\t|\t".center(5) + f'{search_key.capitalize()}:{dictionary[search_key]}'
@@ -99,6 +190,18 @@ def get_name_data(dictionary: dict, search_key: str) -> str:
         print(f"KeyError: {err} not in dict.")
 
 def get_formatted_key_value(dictionary: dict, search_key: str) -> str:
+    """
+    This function takes a dictionary and a search key, and returns a formatted string with the
+    capitalized search key and its corresponding value, with underscores replaced by spaces.
+    
+    :param dictionary: A dictionary object that contains key-value pairs
+    :type dictionary: dict
+    :param search_key: The key that we want to search for in the dictionary
+    :type search_key: str
+    :return: a formatted string that contains the capitalized search key and its corresponding value
+    from the input dictionary, with underscores replaced by spaces. If the input dictionary is empty,
+    not a dictionary, or the search key is not found in the dictionary, the function returns None.
+    """
     if not dictionary or not isinstance(dictionary, dict) or search_key not in dictionary:
         return None
     else:
@@ -134,6 +237,25 @@ def quicksort_for_dicts(origin_dict_list:list, comp_key, asc: bool = True) -> li
         return quicksort_for_dicts(lesser, comp_key, asc) + [pivot] + quicksort_for_dicts(greater, comp_key, asc)
 
 def quicksort_for_dicts_double_key(origin_dict_list:list, comp_key: str, sub_comp_key:str, asc: bool = True) -> list:
+    """
+    This is a Python function that performs a quicksort algorithm on a list of dictionaries based on a
+    double key comparison.
+    
+    :param origin_dict_list: a list of dictionaries that need to be sorted
+    :type origin_dict_list: list
+    :param comp_key: The key in the dictionary that will be used as the primary basis for comparison
+    during sorting
+    :type comp_key: str
+    :param sub_comp_key: The sub_comp_key parameter is a string that represents the secondary key to be
+    used for sorting the list of dictionaries. It is used in conjunction with the comp_key parameter to
+    sort the list of dictionaries based on two keys
+    :type sub_comp_key: str
+    :param asc: A boolean parameter that determines whether the sorting should be in ascending order
+    (True) or descending order (False), defaults to True
+    :type asc: bool (optional)
+    :return: a sorted list of dictionaries based on two keys: `comp_key` and `sub_comp_key`. The sorting
+    order is determined by the `asc` parameter, which is set to `True` by default.
+    """
     if len(origin_dict_list) <= 1:
         return origin_dict_list
     else:
@@ -151,15 +273,34 @@ def quicksort_for_dicts_double_key(origin_dict_list:list, comp_key: str, sub_com
 ########## Calculate Functions ##########
 
 def calculate_max_min_data_dicts(dict_list: list[dict], search_key: str, search_sub_key: str, pick_max: bool = True) -> list:
+    """
+    This function takes a list of dictionaries, a search key, and a search sub-key, and returns a list
+    of dictionaries that have the maximum or minimum value for the specified sub-key.
+    
+    :param dict_list: A list of dictionaries that contain data to be searched and compared
+    :type dict_list: list[dict]
+    :param search_key: The key in the dictionary that we want to search for a maximum or minimum value
+    in
+    :type search_key: str
+    :param search_sub_key: The sub-key within the dictionary's value that we want to search for the
+    maximum or minimum value
+    :type search_sub_key: str
+    :param pick_max: A boolean parameter that determines whether to pick the maximum or minimum value
+    for the search sub-key. If pick_max is True, the function will return the dictionary(s) with the
+    highest value for the search sub-key. If pick_max is False, the function will return the
+    dictionary(s) with the lowest, defaults to True
+    :type pick_max: bool (optional)
+    :return: a list of dictionaries that have the maximum or minimum value for a given sub-key within a
+    list of dictionaries. The number of dictionaries in the returned list depends on how many
+    dictionaries have the same maximum or minimum value for the given sub-key.
+    """
     if not dict_list:
         return []
     else:
         try:
             if isinstance(dict_list, list) and all(isinstance(d , dict) for d in dict_list):
-
                 search_value = None
                 search_list = []
-
                 for dictionary in dict_list:
                     value = dictionary[search_key][search_sub_key]
                     if search_value is None or (value > search_value if pick_max else value < search_value):
@@ -167,15 +308,35 @@ def calculate_max_min_data_dicts(dict_list: list[dict], search_key: str, search_
                         search_list = [dictionary]
                     elif value == search_value:
                         search_list.append(dictionary)
-
                 return search_list
-        
         except KeyError as e1:
             print(f"KeyError: {e1} not in dict.")
         except ValueError as e2:
             print(f"ValueError: {e2} for '{search_key}' key ")
 
 def sum_dicts_data(dict_list:list[dict], search_key:str, sub_search_key: str, double_key: bool = True) -> float:
+    """
+    This function takes a list of dictionaries, a search key, and a sub-search key, and returns the sum
+    of all values associated with the search key and sub-search key in the dictionaries, with an option
+    to double-check the sub-search key.
+    
+    :param dict_list: A list of dictionaries that contain data to be summed
+    :type dict_list: list[dict]
+    :param search_key: The key to search for in the dictionaries within the list
+    :type search_key: str
+    :param sub_search_key: The sub_search_key parameter is a string that represents the key to search
+    for within a nested dictionary. It is used in conjunction with the search_key parameter to locate
+    the value to be summed
+    :type sub_search_key: str
+    :param double_key: double_key is a boolean parameter that determines whether the function should
+    look for a nested key in the dictionaries or not. If double_key is True, the function will look for
+    a key (search_key) in the dictionaries and then look for a sub-key (sub_search_key) within the value
+    of that, defaults to True
+    :type double_key: bool (optional)
+    :return: a float value which is the sum of all the values in the dictionaries that match the search
+    key and sub-search key criteria. If the input is invalid or there is an error, the function returns
+    None and prints an error message.
+    """
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
         return None
     else:
@@ -200,6 +361,19 @@ def sum_dicts_data(dict_list:list[dict], search_key:str, sub_search_key: str, do
             print(f"TypeError: {err3}")
 
 def divide(dividend:int, divider:int) -> float:
+    """
+    The function takes two integer inputs and returns their quotient as a float, handling division by
+    zero and catching any value or type errors.
+    
+    :param dividend: an integer representing the number being divided
+    :type dividend: int
+    :param divider: The parameter "divider" is an integer representing the number that will be used to
+    divide the "dividend" parameter
+    :type divider: int
+    :return: a float value which is the result of dividing the dividend by the divider. If the divider
+    is 0, the function returns 0. If there is a ValueError or TypeError exception raised during the
+    division, the function prints the error message and returns 0.
+    """
     if divider == 0:
         return 0
     else:
@@ -213,6 +387,25 @@ def divide(dividend:int, divider:int) -> float:
             return 0
 
 def calculate_avg(dict_list: list[dict], search_key, sub_search_key, double_key: bool = True) -> float:
+    """
+    This function calculates the average of a specific value in a list of dictionaries based on a search
+    key and a sub-search key.
+    
+    :param dict_list: a list of dictionaries that contain data to be averaged
+    :type dict_list: list[dict]
+    :param search_key: The key to search for in the dictionaries within the list
+    :param sub_search_key: The sub_search_key parameter is a string that represents a key in the
+    dictionaries within the dict_list parameter. This key is used to access a specific value within each
+    dictionary that corresponds to the search_key parameter
+    :param double_key: A boolean parameter that determines whether the function should look for a
+    sub_search_key within the values of the search_key in the dictionaries. If double_key is True, the
+    function will sum the values of the sub_search_key for each dictionary that has the search_key and
+    then divide by the number of dictionaries that, defaults to True
+    :type double_key: bool (optional)
+    :return: a float value, which is the average of the values in the dictionaries in the input list
+    that match the search key and sub-search key. If no matching dictionaries are found, the function
+    returns None.
+    """
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
         return None
     else:
@@ -231,6 +424,25 @@ def calculate_avg(dict_list: list[dict], search_key, sub_search_key, double_key:
 ########## Printing / Listing ##########
 
 def list_name_stat(dict_list: list[dict], stat: str, header:str = None) -> None:
+    """
+    The function takes a list of dictionaries and a specific statistic, and prints out the name and
+    value of that statistic for each dictionary in the list.
+    
+    :param dict_list: A list of dictionaries containing information about individuals, including their
+    names and statistics
+    :type dict_list: list[dict]
+    :param stat: The parameter "stat" is a string that represents the name of the statistic that we want
+    to retrieve from the dictionaries in the list
+    :type stat: str
+    :param header: The header parameter is an optional string that can be passed to the function to
+    print a header before the list of names and their corresponding statistics. If no header is
+    provided, the function will not print a header
+    :type header: str
+    :return: If the input is invalid (empty list or non-dict elements), the function returns None. If
+    the input is valid but the specified stat is not present in all dictionaries, the function prints a
+    message and returns None. Otherwise, the function prints the name and the value of the specified
+    stat for each dictionary in the list. No value is returned explicitly.
+    """
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
         return None
     else:
@@ -244,6 +456,18 @@ def list_name_stat(dict_list: list[dict], stat: str, header:str = None) -> None:
                 return None
 #1.
 def list_names_data(dict_list: list[dict], search_key: str) -> None:
+    """
+    This function takes a list of dictionaries and a search key, and prints the name data of the
+    dictionary that contains the search key.
+    
+    :param dict_list: A list of dictionaries containing information about players
+    :type dict_list: list[dict]
+    :param search_key: The search_key parameter is a string that is used to search for a specific key in
+    the dictionaries within the dict_list parameter. The function will print out the values associated
+    with the search_key in each dictionary that contains it
+    :type search_key: str
+    :return: The function does not return anything, it only prints the output to the console.
+    """
     if not dict_list or not isinstance(dict_list, list):
         print("empty list/ not all elements in list are dicts.")
         return None
@@ -255,6 +479,18 @@ def list_names_data(dict_list: list[dict], search_key: str) -> None:
 
 #2.
 def list_index_kv_pair(dict_list: list[dict], search_key) -> None:
+    """
+    The function takes a list of dictionaries and a search key, and prints the index and formatted
+    key-value pair of each dictionary in the list that contains the search key.
+    
+    :param dict_list: A list of dictionaries containing key-value pairs
+    :type dict_list: list[dict]
+    :param search_key: The parameter "search_key" is a variable that represents the key that we want to
+    search for in the dictionaries within the list "dict_list". It is used to retrieve the value
+    associated with that key in each dictionary
+    :return: The function is not returning anything, it is printing the formatted key-value pairs of the
+    search_key in each dictionary of the dict_list.
+    """
     if not dict_list or not isinstance(dict_list, list) or not all(isinstance(d, dict) for d in dict_list):
         return None
     else:
@@ -262,6 +498,17 @@ def list_index_kv_pair(dict_list: list[dict], search_key) -> None:
             print(f'{index+1}-{get_formatted_key_value(player, search_key)}')
 
 def print_column_key_values(statistics: dict, name: str) -> None:
+    """
+    This function takes in a dictionary of statistics and a name, and prints out the key-value pairs of
+    the dictionary with the keys capitalized and underscores replaced with spaces.
+    
+    :param statistics: A dictionary containing statistical data
+    :type statistics: dict
+    :param name: The name of the entity for which the statistics are being displayed
+    :type name: str
+    :return: If the input `statistics` is empty or not a dictionary, the function returns `None`.
+    Otherwise, the function does not return anything (`None` is implicitly returned).
+    """
     if not statistics or not isinstance(statistics, dict):
         return None
     else:
@@ -270,6 +517,18 @@ def print_column_key_values(statistics: dict, name: str) -> None:
             print(f'{key.capitalize().replace("_", " ")}: {value}')
 
 def get_player_statistics(dict_list: list[dict]) -> dict:
+    """
+    This function takes a list of dictionaries containing player statistics, prompts the user to select
+    a player by index, and returns the selected player's dictionary.
+    
+    :param dict_list: A list of dictionaries containing player statistics. Each dictionary represents a
+    player and contains keys such as "nombre" (name), "edad" (age), "posicion" (position), "goles"
+    (goals), etc
+    :type dict_list: list[dict]
+    :return: a dictionary containing the statistics of a selected player from a list of dictionaries. If
+    the input list is empty or contains non-dictionary elements, an empty dictionary is returned. If the
+    selected player index is out of range, a message is printed and an empty dictionary is returned.
+    """
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
         return {}
     else:
@@ -284,6 +543,17 @@ def get_player_statistics(dict_list: list[dict]) -> dict:
 
 #3. Save name, position & player statistics
 def extract_statistics_dict(dictionary: dict) -> dict:
+    """
+    The function extracts statistics from a dictionary and returns a new dictionary with the player's
+    name, position, and all the statistics.
+    
+    :param dictionary: A dictionary containing information about a player's name, position, and
+    statistics
+    :type dictionary: dict
+    :return: The function `extract_statistics_dict` returns a dictionary containing the player's name,
+    position, and statistics if the input `dictionary` is not empty and is a dictionary. If the input is
+    empty or not a dictionary, an empty dictionary is returned.
+    """
     if dictionary and isinstance(dictionary, dict):
         player_statistics_dict = dict()
         player_statistics_dict["nombre"] = dictionary.get("nombre")
@@ -295,6 +565,16 @@ def extract_statistics_dict(dictionary: dict) -> dict:
         return {}
 
 def save_player_statistics_as_csv(dictionary: dict) -> bool:
+    """
+    This function prompts the user to save a player's statistics as a CSV file and returns a boolean
+    indicating whether the file was successfully saved.
+    
+    :param dictionary: A dictionary containing player statistics, with keys such as 'nombre' (name),
+    'edad' (age), 'goles' (goals), etc
+    :type dictionary: dict
+    :return: a boolean value. It returns True if the player's statistics are successfully saved as a CSV
+    file, and False if they are not saved.
+    """
     option = get_string(f"\nDo you want to save {dictionary['nombre']}'s statistics as csv? (y/n) ")
     if re.match(r"^[y]$", option, re.I):
         player_statistics_dict = extract_statistics_dict(dictionary)
@@ -307,6 +587,16 @@ def save_player_statistics_as_csv(dictionary: dict) -> bool:
     
 #4. let user select a player by name, then list achievements for that player/s
 def find_name_by_string_comp(dict_list: list[dict]) -> list:
+    """
+    This function takes a list of dictionaries containing player information and returns a filtered list
+    of players whose names match a given search string.
+    
+    :param dict_list: A list of dictionaries, where each dictionary represents a player and contains
+    information about the player such as their name, age, and team
+    :type dict_list: list[dict]
+    :return: The function `find_name_by_string_comp` returns a list of dictionaries that match the
+    search parameter entered by the user. If no matches are found, an empty list is returned.
+    """
     if not dict_list:
         return []
     else: 
@@ -328,6 +618,17 @@ def find_name_by_string_comp(dict_list: list[dict]) -> list:
         return []
 
 def show_player_achievements_by_name(dict_list: list[dict]) -> None:
+    """
+    This function takes a list of dictionaries containing player information and allows the user to
+    search for a player by name and display their achievements.
+    
+    :param dict_list: The parameter dict_list is a list of dictionaries, where each dictionary
+    represents a player and their achievements. The dictionaries have two keys: "nombre" (name of the
+    player) and "logros" (list of achievements)
+    :type dict_list: list[dict]
+    :return: None in some cases, and printing the achievements of the selected player or players in
+    other cases.
+    """
     if not dict_list or not all((d, dict) for d in dict_list):
         return None
     else:
@@ -354,6 +655,16 @@ def show_player_achievements_by_name(dict_list: list[dict]) -> None:
 
 #5. calc. & show avg. points per game (per dream team player) sorted by name (asc)
 def calc_avg_points_list_players(dict_list: list[dict]) -> list:
+    """
+    This function takes a list of dictionaries containing player statistics, sorts them by name,
+    calculates the average points per game for the team, and returns the sorted list.
+    
+    :param dict_list: A list of dictionaries, where each dictionary represents a player and their
+    statistics
+    :type dict_list: list[dict]
+    :return: a sorted list of dictionaries with the average points per game for the whole team printed
+    to the console.
+    """
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
         print("empty list/ not all elements in list are dicts.")
         return []
@@ -365,6 +676,19 @@ def calc_avg_points_list_players(dict_list: list[dict]) -> list:
 
 #6. let user select a player by name and show if he belongs to hall of fame
 def filter_values_from_dict_list(dict_list: list[dict], search_key, filter_string: str) -> list:
+    """
+    The function filters a list of dictionaries based on a search key and a filter string.
+    
+    :param dict_list: A list of dictionaries that will be searched for values matching the filter_string
+    :type dict_list: list[dict]
+    :param search_key: The key in the dictionaries of the input list that will be searched for the
+    filter string
+    :param filter_string: The string that will be used to filter the values in the dictionary list. It
+    will be matched against the end of each value in the search_key
+    :type filter_string: str
+    :return: a list of dictionaries from the input `dict_list` where the value of the `search_key`
+    matches the `filter_string` pattern.
+    """
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
         return None
     else:
@@ -372,6 +696,14 @@ def filter_values_from_dict_list(dict_list: list[dict], search_key, filter_strin
         return [d for d in dict_list if any(re.search(pattern, item, re.I) for item in d.get(search_key, []))]
 
 def show_player_hall_of_fame(dict_list: list[dict]) -> None:
+    """
+    The function takes a list of dictionaries, filters it based on a specific string, and prints the
+    names of players who belong to a hall of fame.
+    
+    :param dict_list: A list of dictionaries containing information about basketball players
+    :type dict_list: list[dict]
+    :return: The function does not return anything, it only prints output to the console.
+    """
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
         print("empty list/ not all elements in list are dicts.")
         return None
@@ -390,16 +722,51 @@ def show_player_hall_of_fame(dict_list: list[dict]) -> None:
 
 #7. calculate and print player w/ the highest total rebounds count
 def get_highest_stat_player(dict_list: list[dict], search_key: str, search_sub_key: str) -> list:
+    """
+    This function takes a list of dictionaries and returns a list of players with the highest value for
+    a specified key and sub-key.
+    
+    :param dict_list: A list of dictionaries containing player data, where each dictionary represents a
+    player and their stats
+    :type dict_list: list[dict]
+    :param search_key: The key in the dictionary that we want to search for the highest value of
+    :type search_key: str
+    :param search_sub_key: The search_sub_key parameter is a string that represents the sub-key within
+    the dictionary that contains the value to be compared when searching for the highest stat player
+    :type search_sub_key: str
+    :return: a list of dictionaries containing the player(s) with the highest value for a given search
+    key and sub-key within a list of dictionaries. If the input list is empty or not a list of
+    dictionaries, an empty list is returned. If there are no players with the given search key and
+    sub-key, an empty list is also returned.
+    """
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
         return []
     else:
-        max_stat_players = calculate_max_min_data_dicts(players_list, search_key, search_sub_key, True)
+        max_stat_players = calculate_max_min_data_dicts(dict_list, search_key, search_sub_key, True)
         if not max_stat_players:
             return []
         else:
             return max_stat_players
 
 def filter_greater_or_lesser(dict_list: list[dict], search_key, search_sub_key, greater: bool = True) -> list:
+    """
+    This function filters a list of dictionaries based on whether a specified sub-key's value is greater
+    or lesser than a given value.
+    
+    :param dict_list: a list of dictionaries
+    :type dict_list: list[dict]
+    :param search_key: The key in the dictionary that contains the sub-key to search for
+    :param search_sub_key: The sub-key to search for within the dictionary's value associated with the
+    search_key
+    :param greater: A boolean parameter that determines whether the function should filter for values
+    greater than or less than the input value. If greater is True, the function will filter for values
+    greater than the input value. If greater is False, the function will filter for values less than the
+    input value, defaults to True
+    :type greater: bool (optional)
+    :return: a list of dictionaries that have a value for the specified search_key and search_sub_key
+    that is either greater or lesser than the input value, depending on the value of the greater
+    parameter.
+    """
     if not dict_list:
         return []
     else:
@@ -407,7 +774,6 @@ def filter_greater_or_lesser(dict_list: list[dict], search_key, search_sub_key, 
         lesser_list = list()
         greater_list = list()
         for dictionary in dict_list:
-            #REFACTOR VALIDATION SO FUNC. INSTANTLY BREAKS WHEN INVALID PARAM. KEYS
             if search_key in dictionary and search_sub_key in dictionary[search_key]:
                 if dictionary[search_key][search_sub_key] < value:
                     lesser_list.append(dictionary)
@@ -424,6 +790,23 @@ def filter_greater_or_lesser(dict_list: list[dict], search_key, search_sub_key, 
                 return lesser_list
 
 def get_higher_stats_per_game_list(dict_list: list[dict], search_key: str, sub_search_key: str) -> list:
+    """
+    This function returns a filtered list of dictionaries based on a search key and sub-search key,
+    where the values of the sub-search key are greater than the search key.
+    
+    :param dict_list: A list of dictionaries containing data for each game, where each dictionary
+    represents a game and its attributes
+    :type dict_list: list[dict]
+    :param search_key: The key in the dictionary to search for higher or lower values
+    :type search_key: str
+    :param sub_search_key: The sub_search_key is a string representing the key of a nested dictionary
+    within each dictionary in the dict_list parameter. It is used to filter the list of dictionaries
+    based on a specific value within the nested dictionary
+    :type sub_search_key: str
+    :return: The function `get_higher_stats_per_game_list` returns a list of dictionaries that have a
+    value greater than or equal to the specified search value for the specified key and sub-key. If
+    there are no matches found, an empty list is returned.
+    """
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
         return []
     else:
@@ -435,6 +818,17 @@ def get_higher_stats_per_game_list(dict_list: list[dict], search_key: str, sub_s
             return filtered_list
 #16.
 def show_points_per_game_avg_less_lower(dict_list: list[dict]) -> None:
+    """
+    The function takes a list of dictionaries containing statistics of players and prints the average
+    points per game for all players except the one with the lowest score.
+    
+    :param dict_list: A list of dictionaries, where each dictionary represents statistics for a player
+    in a game. The dictionaries should have the following keys: 'nombre' (player name),
+    'promedio_puntos_por_partido' (average points per game), and any other statistics relevant to the
+    game
+    :type dict_list: list[dict]
+    :return: The function does not return anything, it only prints the result.
+    """
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
         return None
     else:
@@ -447,6 +841,24 @@ def show_points_per_game_avg_less_lower(dict_list: list[dict]) -> None:
 
 #CALC. AUX FUNC
 def calc_max_data_dicts(dict_list: list[dict], search_key: str, comp_len: bool = False) -> list:
+    """
+    This function takes a list of dictionaries, a search key, and an optional boolean flag, and returns
+    a list of dictionaries that have the maximum value for the specified search key.
+    
+    :param dict_list: A list of dictionaries that will be searched for the maximum value of a specified
+    key
+    :type dict_list: list[dict]
+    :param search_key: The key in the dictionaries that the function will search for the maximum value
+    :type search_key: str
+    :param comp_len: A boolean parameter that determines whether to compare the length of the values in
+    the dictionaries or their actual values. If set to True, the function will compare the length of the
+    values instead of their actual values, defaults to False
+    :type comp_len: bool (optional)
+    :return: The function `calc_max_data_dicts` returns a list of dictionaries that have the maximum
+    value for the specified `search_key` in the input `dict_list`. If `comp_len` is set to `True`, the
+    function compares the length of the values for `search_key` instead of their actual values. If the
+    input `dict_list` is empty or not all elements in the list are dictionaries
+    """
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
         print("empty list / not all elements in list are dicts.")
         return None
@@ -474,6 +886,16 @@ def calc_max_data_dicts(dict_list: list[dict], search_key: str, comp_len: bool =
             return max_list
 
 def show_highest_achievements_player(dict_list: list[dict]) -> None:
+    """
+    This function takes a list of dictionaries containing player information and displays the player(s)
+    with the highest number of achievements along with their achievements.
+    
+    :param dict_list: A list of dictionaries, where each dictionary represents a player and their
+    achievements
+    :type dict_list: list[dict]
+    :return: The function is not returning anything, it is printing the highest number of achievements
+    players and their achievements.
+    """
     if not dict_list:
         return None
     else:
@@ -488,6 +910,17 @@ def show_highest_achievements_player(dict_list: list[dict]) -> None:
 
 #20. 
 def list_by_position_higher_stats(dict_list: list[dict]) -> None:
+    """
+    This function sorts a list of dictionaries containing basketball player information by their
+    position and prints their name, shooting percentage, and position in a formatted way.
+    
+    :param dict_list: A list of dictionaries representing basketball players and their statistics. Each
+    dictionary contains keys "nombre" (name), "posicion" (position), and "estadisticas" (statistics),
+    where "estadisticas" is itself a dictionary containing keys "porcentaje_tiros_de_campo"
+    :type dict_list: list[dict]
+    :return: The function does not return anything, it prints a formatted list of players with their
+    name, shooting percentage, and position.
+    """
     if not dict_list:
         return None
     else:
@@ -512,6 +945,19 @@ def list_by_position_higher_stats(dict_list: list[dict]) -> None:
 
 #23.
 def create_sub_list_stats_rankings(dict_list: list[dict]) -> list:
+    """
+    This function takes a list of dictionaries containing player stats and returns a new list of
+    dictionaries with each player's name and their rankings in various stats categories.
+    
+    :param dict_list: A list of dictionaries, where each dictionary represents a player and their
+    statistics in a basketball game. The dictionaries have the following keys: "nombre" (player name),
+    "estadisticas" (a dictionary with keys "puntos_totales", "rebotes_totales", "asistencias
+    :type dict_list: list[dict]
+    :return: a list of dictionaries containing the name of each player and their rankings for four
+    different statistics: total points, total rebounds, total assists, and total steals. The rankings
+    are based on the values of each statistic in the original list of dictionaries passed as an argument
+    to the function.
+    """
     if not dict_list:
         return []
     else:
@@ -529,7 +975,3 @@ def create_sub_list_stats_rankings(dict_list: list[dict]) -> list:
                         break
 
         return rankings_dict_list
-
-##########  ##########  ##########  ##########  ##########  ##########
-
-players_list = read_json_file("dt.json", "jugadores")
