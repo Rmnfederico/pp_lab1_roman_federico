@@ -1,3 +1,4 @@
+import copy
 import re
 import os
 from files_handling_functions import *
@@ -859,11 +860,11 @@ def calc_max_data_dicts(dict_list: list[dict], search_key: str, comp_len: bool =
     """
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
         print("empty list / not all elements in list are dicts.")
-        return None
+        return []
     else:
         if not all(search_key in d for d in dict_list):
             print(f"search key '{search_key}' not present in all dicts.")
-            return None
+            return []
         else:
             max_value = dict_list[0][search_key]
             max_list = []
@@ -973,3 +974,71 @@ def create_sub_list_stats_rankings(dict_list: list[dict]) -> list:
                         break
 
         return rankings_dict_list
+    
+# EXTRA 1. - Determinate number of players for each position
+
+def count_players_by_position(dict_list: list[dict]):
+    if not dict_list or not all(isinstance(d, dict) for d in dict_list):
+        return {"error": "empty list / not all elements in list are dicts."}
+    else:
+        positions_dict = {}
+        for player in dict_list:
+            position = player.get("posicion")
+            if position:
+                if position in positions_dict:
+                    positions_dict[position] += 1
+                else:
+                    positions_dict[position] = 1
+        return positions_dict
+
+# EXTRA 2. - Show players list sorted by All-Star amount (descending)
+# Output:
+# Michael Jordan (14 veces all-star)
+# Magic Johnson (12 veces all-star)
+
+def sort_by_all_stars(origin_dict_list):
+    if not origin_dict_list or not all(isinstance(d, dict) for d in origin_dict_list):
+        return []
+    else:
+        #copy_list = origin_dict_list.copy()
+        #copy_list = origin_dict_list[:]
+        copy_list = copy.deepcopy(origin_dict_list)
+
+        copy_list = [copy_player for copy_player in copy_list if any(re.search("all-star", a, re.I) for a in copy_player["logros"])]
+        
+        # SWITCHING ACHIEVEMENTS STR LIST TO AN INT
+        for index, copy_player in enumerate(copy_list):
+            for achievement in copy_player["logros"]:
+                if re.search("all-star", achievement, re.I):
+                    copy_list[index]["logros"] = int(achievement.split(" ", 1)[0])
+                    break
+
+        copy_list = quicksort_for_dicts(copy_list, "logros", False)
+        
+        # SWITCHING ACHIEVEMENTS STR LIST BACK
+        for copy_player in copy_list:
+            for player in origin_dict_list:
+                if copy_player["nombre"] == player["nombre"]:
+                    copy_player["logros"] = player["logros"]
+                    break
+        
+        # ADDING PLAYER THAT DOESN'T HAVE "ALL-STAR" AS ACHIEVEMENT
+        for or_player in origin_dict_list:
+            if not any(re.search("all-star", a, re.I) for a in or_player["logros"]):
+                #print(or_player["nombre"])
+                copy_list.append(or_player)
+        
+        # PRINTING SORTED PLAYERS
+        for copy_player in copy_list:
+            if any(re.search("all-star", a, re.I) for a in copy_player["logros"]):
+                print(f'{copy_player["nombre"]} | {copy_player["logros"][1]}')
+            else:
+                print(copy_player["nombre"] + " | :(")
+
+##################
+
+players_list = read_json_file("dt.json", "jugadores")
+
+#print(count_players_by_position(players_list)) # WORKING
+
+#sort_by_all_stars(players_list) # WORKING
