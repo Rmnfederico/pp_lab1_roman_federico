@@ -1012,7 +1012,7 @@ def sort_by_all_stars(origin_dict_list):
                 if re.search("all-star", achievement, re.I):
                     copy_list[index]["logros"] = int(achievement.split(" ", 1)[0])
                     break
-
+        # SORTING LIST BY ALL-STARS NUMBER
         copy_list = quicksort_for_dicts(copy_list, "logros", False)
         
         # SWITCHING ACHIEVEMENTS STR LIST BACK
@@ -1035,6 +1035,47 @@ def sort_by_all_stars(origin_dict_list):
             else:
                 print(copy_player["nombre"] + " | :(")
 
+# EXTRA 3. - GET BEST STATS PLAYER FOR EVERY VALUE AND PRINT THEM.
+
+def get_best_stats_players(dict_list: list[dict]):
+    if not dict_list or not all(isinstance(d, dict) for d in dict_list):
+        return []
+    else:
+        max_seasons = get_highest_stat_player(dict_list, "estadisticas", "temporadas")
+        max_total_points = get_highest_stat_player(dict_list, "estadisticas", "puntos_totales")
+        max_points_avg = get_highest_stat_player(dict_list, "estadisticas", "promedio_puntos_por_partido")
+        max_total_rebounds = get_highest_stat_player(dict_list, "estadisticas", "rebotes_totales")
+        max_rebounds_avg = get_highest_stat_player(dict_list, "estadisticas", "promedio_rebotes_por_partido")
+        max_total_assists = get_highest_stat_player(dict_list, "estadisticas", "asistencias_totales")
+        max_assists_avg = get_highest_stat_player(dict_list, "estadisticas", "promedio_asistencias_por_partido")
+        max_total_steals = get_highest_stat_player(dict_list, "estadisticas", "robos_totales")
+        max_total_blocks = get_highest_stat_player(dict_list, "estadisticas", "bloqueos_totales")
+        max_field_shots_pctg = get_highest_stat_player(dict_list, "estadisticas", "porcentaje_tiros_de_campo")
+        max_free_throws_pctg = get_highest_stat_player(dict_list, "estadisticas", "porcentaje_tiros_libres")
+        max_three_pointers_pctg = get_highest_stat_player(dict_list, "estadisticas", "porcentaje_tiros_triples")
+
+        max_list = [max_seasons, max_total_points, max_points_avg, max_total_rebounds,
+                    max_rebounds_avg, max_total_assists, max_assists_avg, max_total_steals,
+                    max_total_blocks, max_field_shots_pctg, max_free_throws_pctg, max_three_pointers_pctg]
+
+        max_strings_list = ["Max. total points", "Max. Points per game avg.",
+                            "Max. total rebounds", "Max. rebounds per game avg.", "Max. total assists",
+                            "Max. assists per game avg.","Max. total steals", "Max. total blocks",
+                            "Max. field shots percent.", "Max. free throws percent.", "Max. 3-pointers percent."]
+        
+        print("Max. Seasons:", end= " ")
+        for index, player in enumerate(max_seasons):
+            print(f'{player["nombre"]}({player["estadisticas"]["temporadas"]})', end= " / ")
+            if index+1 == len(max_seasons):
+                print(" ")
+ 
+
+        for index, max_str in enumerate(max_strings_list):
+            print(f'{max_str}: {max_list[index][0]["nombre"]}')
+        
+ 
+# EXTRA 4. - 
+
 ##################
 
 players_list = read_json_file("dt.json", "jugadores")
@@ -1042,3 +1083,5 @@ players_list = read_json_file("dt.json", "jugadores")
 #print(count_players_by_position(players_list)) # WORKING
 
 #sort_by_all_stars(players_list) # WORKING
+
+#get_best_stats_players(players_list) # WORKING
