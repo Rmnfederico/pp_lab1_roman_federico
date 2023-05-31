@@ -1076,6 +1076,28 @@ def get_best_stats_players(dict_list: list[dict]):
  
 # EXTRA 4. - 
 
+def get_highest_stats_player(dict_list: list[dict]):
+    if not dict_list or not all(isinstance(d, dict) for d in dict_list):
+        return {}
+    else:
+
+        for index, player in enumerate(dict_list):
+            total_stats = 0
+            for stat in player["estadisticas"].values():
+                total_stats += stat
+            player["total_stats"] = total_stats
+
+        max_player = None
+        for player in dict_list:
+            if not max_player or player["total_stats"] > max_player["total_stats"]:
+                max_player = player
+
+        for player in dict_list:
+            player.pop("total_stats")
+
+        return max_player
+
+
 ##################
 
 players_list = read_json_file("dt.json", "jugadores")
@@ -1084,4 +1106,6 @@ players_list = read_json_file("dt.json", "jugadores")
 
 #sort_by_all_stars(players_list) # WORKING
 
-get_best_stats_players(players_list) # WORKING
+#get_best_stats_players(players_list) # WORKING
+
+get_highest_stats_player(players_list)
