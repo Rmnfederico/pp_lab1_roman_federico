@@ -978,6 +978,16 @@ def create_sub_list_stats_rankings(dict_list: list[dict]) -> list:
 # EXTRA 1. - Determinate number of players for each position
 
 def count_players_by_position(dict_list: list[dict]):
+    """
+    The function counts the number of players by their position in a list of dictionaries.
+    
+    :param dict_list: A list of dictionaries, where each dictionary represents a player and contains
+    information about their position and possibly other attributes
+    :type dict_list: list[dict]
+    :return: a dictionary that contains the count of players by position. If the input list is empty or
+    not all elements in the list are dictionaries, the function returns an error message in a dictionary
+    format.
+    """
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
         return {"error": "empty list / not all elements in list are dicts."}
     else:
@@ -997,6 +1007,15 @@ def count_players_by_position(dict_list: list[dict]):
 # Magic Johnson (12 veces all-star)
 
 def sort_by_all_stars(origin_dict_list):
+    """
+    The function sorts a list of dictionaries by the number of "all-star" achievements and prints the
+    sorted list.
+    
+    :param origin_dict_list: A list of dictionaries representing basketball players and their
+    achievements. Each dictionary has keys "nombre" (name) and "logros" (achievements), where "logros"
+    is a list of strings representing the player's achievements
+    :return: The function does not return anything, it only prints the sorted players.
+    """
     if not origin_dict_list or not all(isinstance(d, dict) for d in origin_dict_list):
         return []
     else:
@@ -1038,6 +1057,15 @@ def sort_by_all_stars(origin_dict_list):
 # EXTRA 3. - GET BEST STATS PLAYER FOR EVERY VALUE AND PRINT THEM.
 
 def get_best_stats_players(dict_list: list[dict]):
+    """
+    This function takes a list of dictionaries containing player statistics and returns the players with
+    the highest values for various statistics, along with their corresponding values.
+    
+    :param dict_list: The input is a list of dictionaries, where each dictionary represents a player and
+    their statistics
+    :type dict_list: list[dict]
+    :return: The function is not returning anything, it is printing the results to the console.
+    """
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
         return []
     else:
@@ -1077,6 +1105,18 @@ def get_best_stats_players(dict_list: list[dict]):
 # EXTRA 4. - 
 
 def get_highest_stats_player(dict_list: list[dict]):
+    """
+    This function takes a list of dictionaries containing player statistics, calculates the total stats
+    for each player, and returns the player with the highest total stats.
+    
+    :param dict_list: A list of dictionaries, where each dictionary represents a player and their
+    statistics. Each dictionary should have a key "estadisticas" which maps to another dictionary
+    containing the player's individual statistics
+    :type dict_list: list[dict]
+    :return: The function `get_highest_stats_player` returns a dictionary representing the player with
+    the highest total statistics from a list of dictionaries containing player information. If the input
+    list is empty or contains non-dictionary elements, an empty dictionary is returned.
+    """
     if not dict_list or not all(isinstance(d, dict) for d in dict_list):
         return {}
     else:
@@ -1108,4 +1148,4 @@ players_list = read_json_file("dt.json", "jugadores")
 
 #get_best_stats_players(players_list) # WORKING
 
-get_highest_stats_player(players_list)
+#get_highest_stats_player(players_list)
