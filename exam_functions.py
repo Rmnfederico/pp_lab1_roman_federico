@@ -1058,10 +1058,10 @@ def get_best_stats_players(dict_list: list[dict]):
                     max_rebounds_avg, max_total_assists, max_assists_avg, max_total_steals,
                     max_total_blocks, max_field_shots_pctg, max_free_throws_pctg, max_three_pointers_pctg]
 
-        max_strings_list = ["Max. total points", "Max. Points per game avg.",
-                            "Max. total rebounds", "Max. rebounds per game avg.", "Max. total assists",
-                            "Max. assists per game avg.","Max. total steals", "Max. total blocks",
-                            "Max. field shots percent.", "Max. free throws percent.", "Max. 3-pointers percent."]
+        max_strings_list = ["puntos_totales", "promedio_puntos_por_partido",
+                            "rebotes_totales", "promedio_rebotes_por_partido", "asistencias_totales",
+                            "promedio_asistencias_por_partido","robos_totales", "bloqueos_totales",
+                            "porcentaje_tiros_de_campo", "porcentaje_tiros_libres", "porcentaje_tiros_triples"]
         
         print("Max. Seasons:", end= " ")
         for index, player in enumerate(max_seasons):
@@ -1071,7 +1071,7 @@ def get_best_stats_players(dict_list: list[dict]):
  
 
         for index, max_str in enumerate(max_strings_list):
-            print(f'{max_str}: {max_list[index][0]["nombre"]}')
+            print(f'Max. {max_str.replace("_", " ")}: {max_list[index][0]["nombre"]} ({max_list[index][0]["estadisticas"][max_str]})')
         
  
 # EXTRA 4. - 
@@ -1084,4 +1084,4 @@ players_list = read_json_file("dt.json", "jugadores")
 
 #sort_by_all_stars(players_list) # WORKING
 
-#get_best_stats_players(players_list) # WORKING
+get_best_stats_players(players_list) # WORKING
